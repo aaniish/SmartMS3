@@ -145,7 +145,7 @@ class ChartspageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 40, child: Container()),
+              SizedBox(height: 85     , child: Container()),
               Expanded(child: new DataList())
             ],
           ),
@@ -174,6 +174,9 @@ class DataList extends StatelessWidget {
                   title: new Text(document['Date'], style: TextStyle(fontFamily: 'HelveticaNeue', fontWeight: FontWeight.bold, fontSize: 15),),
                   leading: Icon(Icons.show_chart, color: Colors.black),
                   contentPadding: EdgeInsets.only(left: 20, right: 20),
+                  onTap: () {
+
+                  },
 
                 );
               }).toList(),
