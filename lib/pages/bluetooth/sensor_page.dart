@@ -143,7 +143,7 @@ class _SensorPageState extends State<SensorPage> {
       await databaseReference
           .collection("Datasets")
           .document(date)
-          .setData({'Data': emgData, 'Date': date});
+          .setData({'Data': emgData, 'Date': date, 'Time': emgData.length});
     }
 
     return WillPopScope(
