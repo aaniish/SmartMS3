@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert' show utf8;
-import 'dart:io';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:oscilloscope/oscilloscope.dart';
 
 const Color redColor = const Color(0xFFEA425C);
@@ -38,22 +36,18 @@ class _SensorPageState extends State<SensorPage> {
 
     final databaseReference = Firestore.instance;
 
+
+
     void createRecord() async {
-      String date = DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
+      String date =
+          DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
       await databaseReference
           .collection("Datasets")
           .document(date)
-          .setData({'Data': emgData, 'Date': date});
+          .setData({'Data': emgData, 'Date': date, 'Time': emgData.length});
     }
 
-    void getData() {
-      databaseReference
-          .collection("books")
-          .getDocuments()
-          .then((QuerySnapshot snapshot) {
-        snapshot.documents.forEach((f) => print('${f.data}}'));
-      });
-    }
+
 
     return WillPopScope(
       onWillPop: () async => true,
@@ -106,7 +100,8 @@ class _SensorPageState extends State<SensorPage> {
                                                 Navigator.of(context).pop(true);
                                               });
                                               return AlertDialog(
-                                                title: Text(' successfully saved'),
+                                                title:
+                                                    Text(' successfully saved'),
                                               );
                                             });
                                       },

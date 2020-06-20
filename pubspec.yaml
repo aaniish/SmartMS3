@@ -31,9 +31,9 @@ dependencies:
   flutter_blue: ^0.7.2
   clay_containers: ^0.2.2
   oscilloscope: ^0.0.3
-  fl_chart: ^0.10.0
   cloud_firestore: ^0.13.6
   date_time_format: ^1.0.0+4
+  syncfusion_flutter_charts: ^18.1.56
 
 
 dev_dependencies:

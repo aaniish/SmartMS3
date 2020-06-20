@@ -5,10 +5,64 @@ import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
+List<double> emgData = [1, 2, 3];
+
+class DataList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('Datasets').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new Text('Loading...');
+          default:
+            return new ListView(
+              scrollDirection: Axis.vertical,
+              children:
+                  snapshot.data.documents.map((DocumentSnapshot document) {
+                return new ListTile(
+                  title: new Text(
+                    document['Date'],
+                    style: TextStyle(
+                        fontFamily: 'HelveticaNeue',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                  leading: Icon(Icons.show_chart, color: Colors.black),
+                  contentPadding: EdgeInsets.only(left: 20, right: 20),
+                  onTap: () {
+                    emgData = document['Data'].cast<double>();
+                    Navigator.of(context).pushNamed('/charts');
+                  },
+                );
+              }).toList(),
+            );
+        }
+      },
+    );
+  }
+}
+
+List<EMGData> getData(List<double> x) {
+  List<EMGData> values = List();
+  for (int i = 0; i < x.length; i++) {
+    values.add(new EMGData(i, x[i]));
+  }
+  return values;
+}
+
+class EMGData {
+  EMGData(this.x, this.y);
+  final int x;
+  final double y;
+}
 
 class ChartsPage extends StatelessWidget {
   @override
@@ -18,6 +72,7 @@ class ChartsPage extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/bluetooth': (BuildContext context) => FlutterBlueApp(),
         '/data': (BuildContext context) => SensorPage(),
+        '/charts': (BuildContext context) => ChartsPage(),
       },
       home: ChartspageScreen(),
     );
@@ -99,87 +154,79 @@ class ChartspageScreen extends StatelessWidget {
                       ],
                     ),
                   )),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 8,
-                            left: 16,
-                            right: 16,
-                            top: 10,
-                          ),
-                          child: Container(
-                              child: Column(
-                            children: <Widget>[
-                            
-                              FlatButton(
-                                color: Colors.white60,
-                                textColor: Colors.black,
-                                disabledColor: Colors.grey,
-                                disabledTextColor: Colors.black,
-                                padding: EdgeInsets.all(10.0),
-                                splashColor: Colors.grey,
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed('/data');
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.red)),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Bluetooth Graph Example",
-                                      style: TextStyle(
-                                          fontFamily: 'HelveticaNeue',
-                                          fontSize: 15.0),
-                                    )
-                                  ],
-                                ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 10,
+                        ),
+                        child: Container(
+                            child: Column(
+                          children: <Widget>[
+                            FlatButton(
+                              color: Colors.white60,
+                              textColor: Colors.black,
+                              disabledColor: Colors.grey,
+                              disabledTextColor: Colors.black,
+                              padding: EdgeInsets.all(10.0),
+                              splashColor: Colors.grey,
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/data');
+                              },
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.red)),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "Bluetooth Graph Example",
+                                    style: TextStyle(
+                                        fontFamily: 'HelveticaNeue',
+                                        fontSize: 15.0),
+                                  )
+                                ],
                               ),
-                            ],
-                          ))),
-                    ],
-                  ),
+                            ),
+                          ],
+                        ))),
+                  ],
                 ),
               ),
-              SizedBox(height: 40, child: Container()),
+              Transform.scale(
+                  scale: height / 1000,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                        child: new SfCartesianChart(
+                            // Initialize category axis
+                            primaryXAxis: CategoryAxis(),
+                            series: <LineSeries<EMGData, int>>[
+                          LineSeries<EMGData, int>(
+                              // Bind data source
+                              dataSource: getData(emgData),
+                              xValueMapper: (EMGData data, _) => data.x,
+                              yValueMapper: (EMGData data, _) => data.y)
+                        ])),
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'PICK DATASET',
+                  style: TextStyle(
+                      fontFamily: 'HelveticaNeue',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+              ),
               Expanded(child: new DataList())
             ],
           ),
         ],
       ),
-    );
-  }
-}
-
-class DataList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Datasets').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return new Text('Loading...');
-          default:
-            return new ListView(
-              scrollDirection: Axis.vertical,
-              children:
-                  snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text(document['Date'], style: TextStyle(fontFamily: 'HelveticaNeue', fontWeight: FontWeight.bold, fontSize: 15),),
-                  leading: Icon(Icons.show_chart, color: Colors.black),
-                  contentPadding: EdgeInsets.only(left: 20, right: 20),
-
-                );
-              }).toList(),
-            );
-        }
-      },
     );
   }
 }

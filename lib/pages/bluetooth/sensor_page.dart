@@ -139,11 +139,11 @@ class _SensorPageState extends State<SensorPage> {
     final databaseReference = Firestore.instance;
 
     void createRecord() async {
+      String date = DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
       await databaseReference
           .collection("Datasets")
-          .document(
-              DateTimeFormat.format(dateTime, format: DateTimeFormats.american))
-          .setData({'Data': emgData});
+          .document(date)
+          .setData({'Data': emgData, 'Date': date, 'Time': emgData.length});
     }
 
     return WillPopScope(
