@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1080837547832",
+    "firebase_url": "https://smart-ms3-test.firebaseio.com",
+    "project_id": "smart-ms3-test",
+    "storage_bucket": "smart-ms3-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080837547832:android:7764420c7caacf482d03cd",
+        "android_client_info": {
+          "package_name": "com.example.smart_ms3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080837547832-iuuetu95ofssd8avfe4hkof7cvfa5h0r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIgvUErPDqUlDCnZtH-MVmNHNOEIWdpkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080837547832-iuuetu95ofssd8avfe4hkof7cvfa5h0r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
