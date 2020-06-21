@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:clay_containers/clay_containers.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
@@ -80,6 +81,11 @@ class ChartsPage extends StatelessWidget {
 }
 
 class ChartspageScreen extends StatelessWidget {
+  List<Color> gradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -196,30 +202,47 @@ class ChartspageScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Transform.scale(
-                  scale: height / 1000,
+              AspectRatio(
+                aspectRatio: 2,
+                child: Container(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(18),
+                      ),
+                      color: redColor),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Container(
-                        child: new SfCartesianChart(
-                            // Initialize category axis
-                            primaryXAxis: CategoryAxis(),
-                            series: <LineSeries<EMGData, int>>[
-                          LineSeries<EMGData, int>(
-                              // Bind data source
-                              dataSource: getData(emgData),
-                              xValueMapper: (EMGData data, _) => data.x,
-                              yValueMapper: (EMGData data, _) => data.y)
-                        ])),
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'PICK DATASET',
-                  style: TextStyle(
-                      fontFamily: 'HelveticaNeue',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                    padding: const EdgeInsets.only(
+                        right: 18.0, left: 12.0, top: 24, bottom: 12),
+                    child: LineChart(
+                      mainData(),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 50,),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          top: 30,
+                          bottom: 8,
+                          left: 32,
+                          right: 16,
+                        ),
+                        child: Container(
+                            child: Row(
+                          children: <Widget>[
+                            Text(
+                              "PICK DATASET",
+                              style: (const TextStyle(
+                                  fontFamily: 'HelveticaNeue',
+                                  fontWeight: FontWeight.bold)),
+                            ),
+                          ],
+                        ))),
+                  ],
                 ),
               ),
               Expanded(child: new DataList())
@@ -227,6 +250,104 @@ class ChartspageScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  List<FlSpot> getDataSpot(List<double> x) {
+    List<FlSpot> values = List();
+    for (int i = 0; i < x.length; i++) {
+      values.add(new FlSpot(i.toDouble(), x[i]));
+    }
+    return values;
+  }
+
+  LineChartData mainData() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: Colors.white,
+            strokeWidth: 1,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color: Colors.white,
+            strokeWidth: 1,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 22,
+          textStyle: const TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 10:
+                return '10';
+              case 20:
+                return '20';
+              case 30:
+                return '30';
+              case 40:
+                return '40';
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 200:
+                return '200';
+              case 400:
+                return '400';
+              case 600:
+                return '600';
+              case 800:
+                return '800';
+            }
+            return '';
+          },
+          reservedSize: 28,
+          margin: 12,
+        ),
+      ),
+      borderData: FlBorderData(
+          show: true, border: Border.all(color: Colors.white, width: 1)),
+      minX: 0,
+      maxX: 45,
+      minY: 0,
+      maxY: 800,
+      lineBarsData: [
+        LineChartBarData(
+          spots: getDataSpot(emgData),
+          isCurved: true,
+          colors: gradientColors,
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            colors:
+                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          ),
+        ),
+      ],
     );
   }
 }

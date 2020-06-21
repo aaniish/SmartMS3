@@ -175,7 +175,6 @@ class HomepageScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              height: height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

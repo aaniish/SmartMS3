@@ -19,7 +19,8 @@ class SensorPage extends StatefulWidget {
 }
 
 class _SensorPageState extends State<SensorPage> {
-  List<double> emgData = [1.0, 2.0, 3.0, 5.0, 4.0, 50.0, 200.0, 330.0, 600.0];
+  List<double> emgData = [0, 0, 0, 615, 617, 565, 619, 559, 618, 614, 619, 618, 535, 570, 609, 618, 617, 522, 587, 616, 575, 166, 0, 0, 0, 619, 618, 617, 616, 0, 0, 618, 619, 619, 400, 401, 406, 411, 410, 413, 409, 408, 403, 473
+];
   final dateTime = new DateTime.now();
 
   @override
