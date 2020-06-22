@@ -36,7 +36,7 @@ class HomepageScreen extends StatelessWidget {
                 height: 30,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     "Exercises",
                     style: TextStyle(
