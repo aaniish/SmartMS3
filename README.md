@@ -1,4 +1,4 @@
-# smart_ms3
+# Smart MS3
 
 A new Flutter project.
 
