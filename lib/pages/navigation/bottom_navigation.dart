@@ -48,14 +48,17 @@ class _BottomBarNavigationState
   ];
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: tabs[_selectedBarIndex],
       bottomNavigationBar: AnimatedBottomBar(
           barItems: widget.barItems,
           animationDuration: const Duration(milliseconds: 150),
           barStyle: BarStyle(
-            fontSize: 20.0,
-            iconSize: 30.0
+            fontSize: width * 0.04,
+            iconSize: width * 0.06,
           ),
           onBarTap: (index) {
             setState(() {

@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:clay_containers/clay_containers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
@@ -219,7 +216,7 @@ class ChartspageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 50,),
+              SizedBox(height: height * 0.05),
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
