@@ -6,6 +6,7 @@ import 'package:date_time_format/date_time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:oscilloscope/oscilloscope.dart';
+import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
@@ -40,12 +41,14 @@ class _SensorPageState extends State<SensorPage> {
 
 
     void createRecord() async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
       String date =
           DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
       await databaseReference
+          .collection("userData")
+          .document(uid)
           .collection("Datasets")
-          .document(date)
-          .setData({'Data': emgData, 'Date': date, 'Time': emgData.length});
+          .add({'Data': emgData, 'Date': date, 'Time': emgData.length});
     }
 
 

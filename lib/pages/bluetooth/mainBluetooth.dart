@@ -73,7 +73,6 @@ class BluetoothOffScreen extends StatelessWidget {
 
 
 class FindDevicesScreen extends StatelessWidget {
-  GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

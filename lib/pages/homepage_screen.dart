@@ -1,6 +1,8 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
+import 'package:smart_ms3/services/auth_service.dart';
+import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color lightRed = const Color(0xCCFF3E4D);
@@ -36,14 +38,54 @@ class HomepageScreen extends StatelessWidget {
                 height: 30,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "Exercises",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'HelveticaNeue',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Exercises",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'HelveticaNeue',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30),
+                          child: FlatButton(
+                            color: Colors.white,
+                            textColor: Colors.black,
+                            disabledColor: Colors.grey,
+                            disabledTextColor: Colors.black,
+                            padding: EdgeInsets.all(10.0),
+                            splashColor: Colors.grey,
+                            onPressed: () async {
+                              try {
+                                AuthService auth = Provider.of(context).auth;
+                                await auth.signOut();
+                                print("Signed Out!");
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.red)),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  "  Sign out",
+                                  style: TextStyle(
+                                      fontFamily: 'HelveticaNeue',
+                                      fontSize: width * 0.03),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   )),
               SizedBox(
@@ -71,29 +113,28 @@ class HomepageScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(30),
                         child: Text(
-                        "YOUR NEXT WORKOUT",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'HelveticaNeue',
-                          fontSize: 15,
-                          color: Colors.white70
-                        ),
+                          "YOUR NEXT WORKOUT",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'HelveticaNeue',
+                              fontSize: 15,
+                              color: Colors.white70),
                         ),
                       ),
-                      
                       Text(
                         "Upper Body",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'HelveticaNeue',
-                          fontSize: 22,
-                          color: Colors.white
-                        ),
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'HelveticaNeue',
+                            fontSize: 22,
+                            color: Colors.white),
+                      ),
                       Expanded(
                           child: Row(
                         children: <Widget>[
-                          SizedBox(width: 20,),
+                          SizedBox(
+                            width: 20,
+                          ),
                           Container(
                               decoration: BoxDecoration(
                                 borderRadius:

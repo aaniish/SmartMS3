@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:smart_ms3/pages/navigation/animated_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/charts_page.dart';
@@ -50,6 +51,8 @@ class _BottomBarNavigationState
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    //final user = Provider.of<User>(context);
+    //print(user);
 
     return Scaffold(
       body: tabs[_selectedBarIndex],

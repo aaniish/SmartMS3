@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
-List<double> emgData = [1, 2, 3];
+List<double> emgData = [0];
 
 class DataList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Datasets').snapshots(),
+      stream: getUsersTripsStreamSnapshots(context),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -46,6 +47,11 @@ class DataList extends StatelessWidget {
       },
     );
   }
+}
+
+Stream<QuerySnapshot> getUsersTripsStreamSnapshots(BuildContext context) async* {
+  final uid = await Provider.of(context).auth.getCurrentUID();
+  yield* Firestore.instance.collection('userData').document(uid).collection('Datasets').snapshots();
 }
 
 List<EMGData> getData(List<double> x) {
@@ -242,7 +248,9 @@ class ChartspageScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(child: new DataList())
+              Expanded(
+                child: Scrollbar(child: new DataList()),
+              )
             ],
           ),
         ],
