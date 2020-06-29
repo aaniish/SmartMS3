@@ -1,8 +1,7 @@
-import 'package:provider/provider.dart';
 import 'package:smart_ms3/pages/navigation/animated_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/charts_page.dart';
-import 'package:smart_ms3/pages/exercise_page.dart';
+import 'package:smart_ms3/pages/mainChartsPage.dart';
 import 'package:smart_ms3/pages/homepage_screen.dart';
 
 const Color redColor = const Color(0xFFEA425C);
@@ -44,8 +43,7 @@ class _BottomBarNavigationState
 
   final tabs = [
     HomepageScreen(),
-    ChartsPage(),
-    MyApp()
+    ChartsPageTwo(),
   ];
   @override
   Widget build(BuildContext context) {

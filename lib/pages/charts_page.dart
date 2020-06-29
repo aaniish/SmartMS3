@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_ms3/pages/mainChartsPage.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
@@ -11,11 +12,19 @@ const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
 List<double> emgData = [0];
 
+void clearEmg() {
+  emgData = [0];
+}
+
 class DataList extends StatelessWidget {
+  final String muscle;
+
+  DataList(this.muscle);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: getUsersTripsStreamSnapshots(context),
+      stream: getUsersDataStreamSnapshots(context, muscle),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -49,9 +58,14 @@ class DataList extends StatelessWidget {
   }
 }
 
-Stream<QuerySnapshot> getUsersTripsStreamSnapshots(BuildContext context) async* {
+Stream<QuerySnapshot> getUsersDataStreamSnapshots(
+    BuildContext context, String group) async* {
   final uid = await Provider.of(context).auth.getCurrentUID();
-  yield* Firestore.instance.collection('userData').document(uid).collection('Datasets').snapshots();
+  yield* Firestore.instance
+      .collection('userData')
+      .document(uid)
+      .collection(group)
+      .snapshots();
 }
 
 List<EMGData> getData(List<double> x) {
@@ -69,6 +83,9 @@ class EMGData {
 }
 
 class ChartsPage extends StatelessWidget {
+  final String muscle;
+  ChartsPage({Key key, @required this.muscle}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -76,9 +93,10 @@ class ChartsPage extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/bluetooth': (BuildContext context) => FlutterBlueApp(),
         '/data': (BuildContext context) => SensorPage(),
-        '/charts': (BuildContext context) => ChartsPage(),
+        '/charts': (BuildContext context) => ChartspageScreen(muscle),
+        '/charts2': (BuildContext context) => ChartsPageTwo(),
       },
-      home: ChartspageScreen(),
+      home: ChartspageScreen(muscle),
     );
   }
 }
@@ -88,6 +106,10 @@ class ChartspageScreen extends StatelessWidget {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
+
+  final String muscle;
+
+  ChartspageScreen(this.muscle);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +146,7 @@ class ChartspageScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "Progress",
+                          muscle,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'HelveticaNeue',
@@ -222,7 +244,7 @@ class ChartspageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.05),
+              SizedBox(height: height * 0.08),
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +271,7 @@ class ChartspageScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Scrollbar(child: new DataList()),
+                child: Scrollbar(child: new DataList(muscle)),
               )
             ],
           ),
@@ -293,6 +315,8 @@ class ChartspageScreen extends StatelessWidget {
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
           getTitles: (value) {
             switch (value.toInt()) {
+              case 0:
+                return '0';
               case 10:
                 return '10';
               case 20:
@@ -339,7 +363,7 @@ class ChartspageScreen extends StatelessWidget {
       lineBarsData: [
         LineChartBarData(
           spots: getDataSpot(emgData),
-          isCurved: true,
+          isCurved: false,
           colors: gradientColors,
           barWidth: 5,
           isStrokeCapRound: true,
@@ -365,6 +389,27 @@ class _AppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          InkWell(
+            onTap: () {
+              clearEmg();
+              Navigator.of(context).pushNamed('/charts2');
+            },
+            child: ClayContainer(
+              height: 50,
+              width: 50,
+              depth: 20,
+              borderRadius: 25,
+              parentColor: redColor,
+              curveType: CurveType.concave,
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.white.withOpacity(0.3), width: 2),
+                    borderRadius: BorderRadius.all(Radius.circular(25))),
+                child: Icon(Icons.arrow_back, color: Colors.black, size: 25),
+              ),
+            ),
+          ),
           Text(
             "Charts",
             style: TextStyle(
@@ -372,21 +417,6 @@ class _AppBar extends StatelessWidget {
                 fontFamily: 'HelveticaNeue',
                 fontSize: 40,
                 fontWeight: FontWeight.bold),
-          ),
-          ClayContainer(
-            height: 50,
-            width: 50,
-            depth: 20,
-            borderRadius: 25,
-            parentColor: redColor,
-            curveType: CurveType.concave,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.white.withOpacity(0.3), width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              child: Icon(Icons.menu, color: Colors.black, size: 25),
-            ),
           ),
         ],
       ),

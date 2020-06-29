@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_format/date_time_format.dart';
@@ -11,6 +11,7 @@ import 'package:smart_ms3/widgets/provider_widget.dart';
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
+final databaseReference = Firestore.instance;
 
 class SensorPage extends StatefulWidget {
   const SensorPage({Key key}) : super(key: key);
@@ -20,12 +21,45 @@ class SensorPage extends StatefulWidget {
 }
 
 class _SensorPageState extends State<SensorPage> {
-  List<double> emgData = [0, 0, 0, 615, 617, 565, 619, 559, 618, 614, 619, 618, 535, 570, 609, 618, 617, 522, 587, 616, 575, 166, 0, 0, 0, 619, 618, 617, 616, 0, 0, 618, 619, 619, 400, 401, 406, 411, 410, 413, 409, 408, 403, 473
-];
+  List<double> emgData = [619, 620, 619, 620, 619, 619, 620, 619, 620, 619, 619, 620, 619, 619, 620, 619, 620, 619, 619, 620, 617, 616, 619, 617, 619, 610, 619, 612, 616, 616, 616, 613, 616, 618, 429, 435, 422, 424, 411, 384, 374, 317, 387, 423];
+  List<int> test = [462];
   final dateTime = new DateTime.now();
 
+  String _dataParser(List<int> dataFromDevice) {
+    return utf8.decode(dataFromDevice);
+  }
+
+  final myController = TextEditingController();
+  final shoulder = [
+    'Anterior Deltoid',
+    'Middle Deltoid',
+    'Posterior Deltoid',
+    'Upper Trapezius',
+    'Middle Trapezius',
+    'Lower Trapezius',
+    'Serratus Anterior',
+    'Teres Minor',
+    'Upper Latissinus Doris',
+    'Lower Latissinus Doris',
+    'Upper Pectoralis Major',
+    'Lower Pectoalis Major',
+    'Supraspinatus',
+    'Infraspinatus',
+    'Subscapularis',
+    'Rhomboid Major'
+  ];
+  String dropdownValue = 'Anterior Deltoid';
+
   @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     Oscilloscope oscilloscope = Oscilloscope(
       showYAxis: true,
       yAxisColor: Colors.white,
@@ -35,27 +69,30 @@ class _SensorPageState extends State<SensorPage> {
       yAxisMin: 0.0,
       dataSet: emgData,
     );
-
     final databaseReference = Firestore.instance;
 
-
-
-    void createRecord() async {
+    void createRecord(String muscleGroup) async {
       final uid = await Provider.of(context).auth.getCurrentUID();
       String date =
           DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
       await databaseReference
           .collection("userData")
           .document(uid)
-          .collection("Datasets")
-          .add({'Data': emgData, 'Date': date, 'Time': emgData.length});
+          .collection(muscleGroup)
+          .add({
+        'Data': emgData,
+        'Date': date,
+        'Time': emgData.length,
+        'Muscle Group': muscleGroup
+      });
     }
 
-
+    var currentValue = (test).toString();
 
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('EMG Sensor'),
         ),
@@ -80,10 +117,60 @@ class _SensorPageState extends State<SensorPage> {
                                 children: <Widget>[
                                   Text('Current value from EMG Sensor',
                                       style: TextStyle(fontSize: 14)),
-                                  Text('20.0',
+                                  Text('${currentValue}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 24)),
+                                  /*
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: TextField(
+                                    controller: myController,
+                                    decoration: new InputDecoration(
+                                        border: new OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(
+                                            const Radius.circular(10.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        hintStyle: new TextStyle(
+                                            color: Colors.grey[800]),
+                                        hintText: "Enter Muscle Group",
+                                        fillColor: Colors.white70),
+                                  ),
+                                  ),
+                                  */
+                                  Padding(
+                                    padding: EdgeInsets.all(20.0),
+                                    child: DropdownButtonFormField(
+                                      value: dropdownValue,
+                                      icon: Icon(Icons.arrow_downward),
+                                      decoration: InputDecoration(
+                                        labelText: "Select Muscle Group",
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      items: shoulder.map((String value) {
+                                        return new DropdownMenuItem<String>(
+                                          value: value,
+                                          child: new Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          dropdownValue = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Select Muscle Group';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 20, right: 20, top: 10),
@@ -95,7 +182,8 @@ class _SensorPageState extends State<SensorPage> {
                                       padding: EdgeInsets.all(10.0),
                                       splashColor: Colors.grey,
                                       onPressed: () {
-                                        createRecord();
+                                        createRecord(dropdownValue);
+                                        myController.clear();
                                         showDialog(
                                             context: context,
                                             builder: (context) {
@@ -105,7 +193,7 @@ class _SensorPageState extends State<SensorPage> {
                                               });
                                               return AlertDialog(
                                                 title:
-                                                    Text(' successfully saved'),
+                                                    Text('successfully saved'),
                                               );
                                             });
                                       },
@@ -132,8 +220,8 @@ class _SensorPageState extends State<SensorPage> {
                                   ),
                                 ]),
                           ),
-                          Expanded(
-                            flex: 1,
+                          Container(
+                            height: height * 0.15,
                             child: oscilloscope,
                           )
                         ],

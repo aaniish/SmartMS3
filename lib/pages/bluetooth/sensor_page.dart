@@ -123,6 +123,7 @@ class _SensorPageState extends State<SensorPage> {
     return utf8.decode(dataFromDevice);
   }
 
+
   @override
   Widget build(BuildContext context) {
     Oscilloscope oscilloscope = Oscilloscope(
@@ -252,3 +253,5 @@ class _SensorPageState extends State<SensorPage> {
     );
   }
 }
+
+

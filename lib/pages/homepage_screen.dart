@@ -1,12 +1,14 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
+import 'package:smart_ms3/pages/charts_page.dart';
 import 'package:smart_ms3/services/auth_service.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color lightRed = const Color(0xCCFF3E4D);
 const Color navColor = const Color(0xFFffebef);
+
 
 class HomepageScreen extends StatelessWidget {
   @override
@@ -62,13 +64,10 @@ class HomepageScreen extends StatelessWidget {
                             padding: EdgeInsets.all(10.0),
                             splashColor: Colors.grey,
                             onPressed: () async {
-                              try {
+                                clearEmg();
                                 AuthService auth = Provider.of(context).auth;
                                 await auth.signOut();
                                 print("Signed Out!");
-                              } catch (e) {
-                                print(e);
-                              }
                             },
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
@@ -76,7 +75,7 @@ class HomepageScreen extends StatelessWidget {
                             child: Row(
                               children: <Widget>[
                                 Text(
-                                  "  Sign out",
+                                  "Sign out",
                                   style: TextStyle(
                                       fontFamily: 'HelveticaNeue',
                                       fontSize: width * 0.03),

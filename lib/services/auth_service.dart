@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+String username;
+
+
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -20,7 +23,7 @@ class AuthService {
       email: email,
       password: password,
     );
-
+    
     // Update the username
     await updateUserName(name, authResult.user);
     return authResult.user.uid;

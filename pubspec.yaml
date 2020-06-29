@@ -37,7 +37,7 @@ dependencies:
   firebase_auth: ^0.16.1
   provider: ^4.1.3
   auto_size_text: ^2.1.0
-
+  flutter_rounded_progress_bar: 0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +60,20 @@ flutter:
     - assets/icons/icon2.png
     - assets/icons/icon3.png
     - assets/icons/icon4.png
+    - assets/icons/chest.png
+    - assets/icons/deltoid.jpg
+    - assets/icons/trapezius.jpg
+    - assets/icons/serratus.jpg
+    - assets/icons/teres.png
+    - assets/icons/pecs.png
+    - assets/icons/dorsi.png
+    - assets/icons/supraspinatus.png
+    - assets/icons/subscapularis.png
+    - assets/icons/infraspinatus.png
+    - assets/icons/rhomboid.png
+
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
