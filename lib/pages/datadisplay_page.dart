@@ -22,7 +22,7 @@ class SensorPage extends StatefulWidget {
 
 class _SensorPageState extends State<SensorPage> {
   List<double> emgData = [619, 620, 619, 620, 619, 619, 620, 619, 620, 619, 619, 620, 619, 619, 620, 619, 620, 619, 619, 620, 617, 616, 619, 617, 619, 610, 619, 612, 616, 616, 616, 613, 616, 618, 429, 435, 422, 424, 411, 384, 374, 317, 387, 423];
-  List<int> test = [462];
+  List<int> test = [26,1,0,0];
   final dateTime = new DateTime.now();
 
   String _dataParser(List<int> dataFromDevice) {
@@ -86,8 +86,9 @@ class _SensorPageState extends State<SensorPage> {
         'Muscle Group': muscleGroup
       });
     }
-
-    var currentValue = (test).toString();
+    String num = "980";
+    var c = utf8.encode(num);
+    var currentValue = _dataParser(c);
 
     return WillPopScope(
       onWillPop: () async => true,

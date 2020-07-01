@@ -42,7 +42,7 @@ class _BottomBarNavigationState
   int _selectedBarIndex = 0;
 
   final tabs = [
-    HomepageScreen(),
+    Homepage(),
     ChartsPageTwo(),
   ];
   @override

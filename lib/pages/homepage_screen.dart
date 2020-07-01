@@ -2,6 +2,7 @@ import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/charts_page.dart';
+import 'package:smart_ms3/pages/userProfile.dart';
 import 'package:smart_ms3/services/auth_service.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
 
@@ -9,13 +10,25 @@ const Color redColor = const Color(0xFFEA425C);
 const Color lightRed = const Color(0xCCFF3E4D);
 const Color navColor = const Color(0xFFffebef);
 
+class Homepage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: <String, WidgetBuilder>{
+        '/profile': (BuildContext context) => ProfileView(),
+      },
+      home: HomepageScreen(),
+    );
+  }
+}
 
 class HomepageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
+   
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -52,36 +65,6 @@ class HomepageScreen extends StatelessWidget {
                             fontFamily: 'HelveticaNeue',
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: FlatButton(
-                            color: Colors.white,
-                            textColor: Colors.black,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(10.0),
-                            splashColor: Colors.grey,
-                            onPressed: () async {
-                                clearEmg();
-                                AuthService auth = Provider.of(context).auth;
-                                await auth.signOut();
-                                print("Signed Out!");
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.red)),
-                            child: Row(
-                              children: <Widget>[
-                                Text(
-                                  "Sign out",
-                                  style: TextStyle(
-                                      fontFamily: 'HelveticaNeue',
-                                      fontSize: width * 0.03),
-                                )
-                              ],
-                            ),
                           ),
                         ),
                       ],
@@ -250,8 +233,10 @@ class HomepageScreen extends StatelessWidget {
 }
 
 class _AppBar extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Row(
@@ -277,7 +262,12 @@ class _AppBar extends StatelessWidget {
                   border: Border.all(
                       color: Colors.white.withOpacity(0.3), width: 2),
                   borderRadius: BorderRadius.all(Radius.circular(25))),
-              child: Icon(Icons.menu, color: Colors.black, size: 25),
+              child: IconButton(
+                icon: Icon(Icons.person, color: Colors.black, size: 25),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/profile');
+                },
+              ),
             ),
           ),
         ],

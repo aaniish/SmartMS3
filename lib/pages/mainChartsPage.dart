@@ -1,13 +1,11 @@
 import 'package:clay_containers/clay_containers.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/charts_page.dart';
 import 'package:smart_ms3/pages/datadisplay_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:smart_ms3/widgets/provider_widget.dart';
+import 'package:smart_ms3/pages/userProfile.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
@@ -22,7 +20,7 @@ class ChartsPageTwo extends StatelessWidget {
         '/bluetooth': (BuildContext context) => FlutterBlueApp(),
         '/data': (BuildContext context) => SensorPage(),
         '/charts': (BuildContext context) => ChartsPageTwo(),
-        '/list': (BuildContext context) => ChartsPage(),
+        '/profile': (BuildContext context) => ProfileView(),
       },
       home: ChartspageScreenTwo(),
     );
@@ -177,7 +175,12 @@ class _AppBar extends StatelessWidget {
                   border: Border.all(
                       color: Colors.white.withOpacity(0.3), width: 2),
                   borderRadius: BorderRadius.all(Radius.circular(25))),
-              child: Icon(Icons.menu, color: Colors.black, size: 25),
+              child: IconButton(
+                icon: Icon(Icons.person, color: Colors.black, size: 25),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/profile');
+                },
+              ),
             ),
           ),
         ],
