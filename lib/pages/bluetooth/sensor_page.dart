@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:oscilloscope/oscilloscope.dart';
+import 'package:smart_ms3/widgets/provider_widget.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 
@@ -28,7 +29,26 @@ class _SensorPageState extends State<SensorPage> {
   Stream<List<int>> stream;
   List<double> emgData = List();
   final dateTime = new DateTime.now();
-
+  final myController = TextEditingController();
+  final shoulder = [
+    'Anterior Deltoid',
+    'Middle Deltoid',
+    'Posterior Deltoid',
+    'Upper Trapezius',
+    'Middle Trapezius',
+    'Lower Trapezius',
+    'Serratus Anterior',
+    'Teres Minor',
+    'Upper Latissinus Doris',
+    'Lower Latissinus Doris',
+    'Upper Pectoralis Major',
+    'Lower Pectoalis Major',
+    'Supraspinatus',
+    'Infraspinatus',
+    'Subscapularis',
+    'Rhomboid Major'
+  ];
+  String dropdownValue = 'Anterior Deltoid';
 
   @override
   void initState() {
@@ -123,28 +143,37 @@ class _SensorPageState extends State<SensorPage> {
     return utf8.decode(dataFromDevice);
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     Oscilloscope oscilloscope = Oscilloscope(
       showYAxis: true,
       yAxisColor: Colors.white,
       padding: 10.0,
       backgroundColor: Colors.black,
       traceColor: Colors.red,
-      yAxisMax: 100.0,
+      yAxisMax: 800.0,
       yAxisMin: 0.0,
       dataSet: emgData,
     );
 
     final databaseReference = Firestore.instance;
 
-    void createRecord() async {
-      String date = DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
+    void createRecord(String muscleGroup) async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
+      String date =
+          DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
       await databaseReference
-          .collection("Datasets")
-          .document(date)
-          .setData({'Data': emgData, 'Date': date, 'Time': emgData.length});
+          .collection("userData")
+          .document(uid)
+          .collection(muscleGroup)
+          .add({
+        'Data': emgData,
+        'Date': date,
+        'Time': emgData.length,
+        'Muscle Group': muscleGroup
+      });
     }
 
     return WillPopScope(
@@ -190,6 +219,37 @@ class _SensorPageState extends State<SensorPage> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 24)),
                                       Padding(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: DropdownButtonFormField(
+                                          value: dropdownValue,
+                                          icon: Icon(Icons.arrow_downward),
+                                          decoration: InputDecoration(
+                                            labelText: "Select Muscle Group",
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                          items: shoulder.map((String value) {
+                                            return new DropdownMenuItem<String>(
+                                              value: value,
+                                              child: new Text(value),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String newValue) {
+                                            setState(() {
+                                              dropdownValue = newValue;
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              return 'Select Muscle Group';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
                                         padding: const EdgeInsets.only(
                                             left: 20, right: 20, top: 10),
                                         child: FlatButton(
@@ -200,18 +260,21 @@ class _SensorPageState extends State<SensorPage> {
                                           padding: EdgeInsets.all(10.0),
                                           splashColor: Colors.grey,
                                           onPressed: () {
-                                            createRecord();
+                                            createRecord(dropdownValue);
+                                            myController.clear();
                                             showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              Future.delayed(
-                                                  Duration(seconds: 1), () {
-                                                Navigator.of(context).pop(true);
-                                              });
-                                              return AlertDialog(
-                                                title: Text(' successfully saved'),
-                                              );
-                                            });
+                                                context: context,
+                                                builder: (context) {
+                                                  Future.delayed(
+                                                      Duration(seconds: 1), () {
+                                                    Navigator.of(context)
+                                                        .pop(true);
+                                                  });
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        'successfully saved'),
+                                                  );
+                                                });
                                           },
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -237,10 +300,10 @@ class _SensorPageState extends State<SensorPage> {
                                       ),
                                     ]),
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: oscilloscope,
-                              )
+                              Container(
+                            height: height * 0.15,
+                            child: oscilloscope,
+                          )
                             ],
                           ));
                         } else {
@@ -253,5 +316,3 @@ class _SensorPageState extends State<SensorPage> {
     );
   }
 }
-
-
