@@ -8,7 +8,6 @@ BLEService emgService("dd55f584-5caa-4726-8be9-6ee6621d52b9");
 BLEUnsignedCharCharacteristic emgLevelChar("6fa807df-2cf4-4e1e-915b-ad0623bf573d",  // standard 128-bit characteristic UUID
     BLERead | BLENotify); // remote clients will be able to get notifications if this characteristic changes
 
-unsigned char emgValue[20];
 int emgNumber = 0;
 int version = 3;
 String str = "Bluetooth device active, waiting for connections... - verison: ";
@@ -62,8 +61,7 @@ void loop() {
         emgNumber = analogRead(A0);
         Serial.print("Sensor value is: "); // print it
         Serial.println(emgNumber);
-        sprintf((char*)emgValue,"%d",emgNumber);
-        emgLevelChar.writeValue(emgValue, emgValue.length);
+        emgLevelChar.writeValue(emgNumber);
         delay(1000); 
     }
     // when the central disconnects, turn off the LED:
