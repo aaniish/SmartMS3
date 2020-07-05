@@ -135,7 +135,7 @@ class ChartspageScreenTwo extends StatelessWidget {
                 padding: const EdgeInsets.all(15.0),
                 child: RoundedProgressBar(
                     childLeft:
-                        Text("20%", style: TextStyle(color: Colors.white)),
+                        Text("20%", style: TextStyle(color: Colors.white, fontFamily: 'HelveticaNeue', fontWeight: FontWeight.bold)),
                     percent: 20,
                     theme: RoundedProgressBarTheme.red),
               )

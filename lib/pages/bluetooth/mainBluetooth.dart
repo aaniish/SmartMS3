@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/sensor_page.dart';
 import 'package:smart_ms3/pages/bluetooth/widgets.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:smart_ms3/pages/mainChartsPage.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color redColorAccent = const Color(0xFFff7388);
@@ -23,6 +24,9 @@ class FlutterBlueApp extends StatelessWidget {
         accentColor: redColor,
         fontFamily: 'HelveticaNeue',
       ),
+      routes: <String, WidgetBuilder>{
+        '/charts': (BuildContext context) => ChartsPageTwo(),
+      },
       color: redColor,
       home: StreamBuilder<BluetoothState>(
           stream: FlutterBlue.instance.state,
@@ -70,14 +74,18 @@ class BluetoothOffScreen extends StatelessWidget {
   }
 }
 
-
-
 class FindDevicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Find SMART MS3'),
+        leading: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.white, size: 25),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/charts');
+                },
+              ),
       ),
       body: RefreshIndicator(
         onRefresh: () =>
@@ -165,8 +173,6 @@ class FindDevicesScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 class DeviceScreen extends StatelessWidget {
   const DeviceScreen({Key key, this.device}) : super(key: key);

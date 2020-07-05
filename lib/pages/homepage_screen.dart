@@ -73,6 +73,7 @@ class HomepageScreen extends StatelessWidget {
               SizedBox(
                 height: 30,
               ),
+              /*
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(
@@ -191,6 +192,7 @@ class HomepageScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              */
             ],
           ),
           Positioned(

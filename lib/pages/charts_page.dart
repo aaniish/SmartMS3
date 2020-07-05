@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clay_containers/clay_containers.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +13,17 @@ const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
 List<double> emgData = [0];
+List<double> emgDataAverage = [0];
+List<double> emgDataOriginal = [0];
+String currentData = '';
+
+
 
 void clearEmg() {
   emgData = [0];
+}
+void clearDate() {
+  currentData = '';
 }
 
 class DataList extends StatelessWidget {
@@ -46,7 +56,9 @@ class DataList extends StatelessWidget {
                   leading: Icon(Icons.show_chart, color: Colors.black),
                   contentPadding: EdgeInsets.only(left: 20, right: 20),
                   onTap: () {
-                    emgData = document['Data'].cast<double>();
+                    emgDataOriginal = document['Data'].cast<double>();
+                    emgData = emgDataOriginal;
+                    currentData = document['Date'];
                     Navigator.of(context).pushNamed('/charts');
                   },
                 );
@@ -106,12 +118,14 @@ class ChartspageScreen extends StatelessWidget {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
-
+  bool showAvg = false;
   final String muscle;
+ 
 
   ChartspageScreen(this.muscle);
 
   @override
+  
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -185,46 +199,93 @@ class ChartspageScreen extends StatelessWidget {
                       ],
                     ),
                   )),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                          top: 10,
-                        ),
-                        child: Container(
-                            child: Column(
-                          children: <Widget>[
-                            FlatButton(
-                              color: Colors.white60,
-                              textColor: Colors.black,
-                              disabledColor: Colors.grey,
-                              disabledTextColor: Colors.black,
-                              padding: EdgeInsets.all(10.0),
-                              splashColor: Colors.grey,
-                              onPressed: () {
-                                Navigator.of(context).pushNamed('/data');
-                              },
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.red)),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    "Bluetooth Graph Example",
-                                    style: TextStyle(
-                                        fontFamily: 'HelveticaNeue',
-                                        fontSize: 15.0),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ))),
-                  ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: new ButtonBar(
+                    mainAxisSize: MainAxisSize
+                        .min, // this will take space as minimum as posible(to center)
+                    children: <Widget>[
+                      FlatButton(
+                                  color: Colors.white60,
+                                  textColor: Colors.black,
+                                  disabledColor: Colors.grey,
+                                  disabledTextColor: Colors.black,
+                                  padding: EdgeInsets.all(10.0),
+                                  splashColor: Colors.grey,
+                                  onPressed: () {
+                                     getAverageDataSpot(emgDataOriginal);
+                                    emgData = emgDataAverage;
+                    Navigator.of(context).pushNamed('/charts');
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red)),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        "Avg",
+                                        style: TextStyle(
+                                            fontFamily: 'HelveticaNeue',
+                                            fontSize: 15.0),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                      FlatButton(
+                                  color: Colors.white60,
+                                  textColor: Colors.black,
+                                  disabledColor: Colors.grey,
+                                  disabledTextColor: Colors.black,
+                                  padding: EdgeInsets.all(10.0),
+                                  splashColor: Colors.grey,
+                                  onPressed: () {
+                                    getSDDataSpot(emgDataOriginal);
+                                    emgData = emgDataAverage;
+                    Navigator.of(context).pushNamed('/charts');
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red)),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        "SD",
+                                        style: TextStyle(
+                                            fontFamily: 'HelveticaNeue',
+                                            fontSize: 15.0),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                FlatButton(
+                                  color: Colors.white60,
+                                  textColor: Colors.black,
+                                  disabledColor: Colors.grey,
+                                  disabledTextColor: Colors.black,
+                                  padding: EdgeInsets.all(10.0),
+                                  splashColor: Colors.grey,
+                                  onPressed: () {
+                                    emgData = emgDataOriginal;
+                                    print(emgData);
+                    Navigator.of(context).pushNamed('/charts');
+                                  },
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red)),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        "Reg",
+                                        style: TextStyle(
+                                            fontFamily: 'HelveticaNeue',
+                                            fontSize: 15.0),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                    ],
+                  ),
                 ),
               ),
               AspectRatio(
@@ -237,14 +298,14 @@ class ChartspageScreen extends StatelessWidget {
                       color: redColor),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        right: 18.0, left: 12.0, top: 24, bottom: 12),
+                        right: 18.0, left: 12.0,bottom: 12),
                     child: LineChart(
                       mainData(),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.08),
+              SizedBox(height: height * 0.05),
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,10 +321,10 @@ class ChartspageScreen extends StatelessWidget {
                             child: Row(
                           children: <Widget>[
                             Text(
-                              "PICK DATASET",
-                              style: (const TextStyle(
+                              "PICK DATASET / CURRENT:  $currentData",
+                              style: (TextStyle(
                                   fontFamily: 'HelveticaNeue',
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold, fontSize: width * 0.03)),
                             ),
                           ],
                         ))),
@@ -286,6 +347,38 @@ class ChartspageScreen extends StatelessWidget {
       values.add(new FlSpot(i.toDouble(), x[i]));
     }
     return values;
+  }
+
+  void getAverageDataSpot(List<double> x) {
+    List<double> values = List();
+    double ave = 0;
+    for (int j = 0; j < x.length; j++) {
+      ave += x[j];
+    }
+    ave = ave / x.length;
+    for (int i = 0; i < x.length; i++) {
+      values.add(ave);
+    }
+    emgDataAverage = values;
+  }
+
+  void getSDDataSpot(List<double> x) {
+    List<double> values = List();
+    double sum = 0;
+    double sd = 0;
+    int length = x.length;
+    for (int j = 0; j < x.length; j++) {
+      sum += x[j];
+    }
+    double mean = sum/length;
+    for (int i = 0; i < x.length; i++) {
+      sd += pow(x[i]-mean,2);
+    }
+    sd = sqrt(sd/length);
+    for (int n = 0; n < x.length; n++) {
+      values.add(sd);
+    }
+    emgDataAverage = values;
   }
 
   LineChartData mainData() {
@@ -392,6 +485,7 @@ class _AppBar extends StatelessWidget {
           InkWell(
             onTap: () {
               clearEmg();
+              clearDate();
               Navigator.of(context).pushNamed('/charts2');
             },
             child: ClayContainer(
