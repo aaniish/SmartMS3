@@ -137,6 +137,8 @@ class _SensorPageState extends State<SensorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     Oscilloscope oscilloscope = Oscilloscope(
       showYAxis: true,
       yAxisColor: Colors.white,
@@ -298,10 +300,10 @@ class _SensorPageState extends State<SensorPage> {
                                       ),
                                     ]),
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: oscilloscope,
-                              )
+                              Container(
+                            height: height * 0.15,
+                            child: oscilloscope,
+                          )
                             ],
                           ));
                         } else {
