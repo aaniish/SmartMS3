@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
      return Provider(
       auth: AuthService(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "Smart MS3",
         theme: ThemeData(
           primarySwatch: Colors.red,

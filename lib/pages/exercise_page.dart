@@ -1,31 +1,169 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clay_containers/clay_containers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
-import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
-import 'package:smart_ms3/pages/datadisplay_page.dart';
+import 'package:smart_ms3/pages/mainExercisePage.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
 
+class DataList extends StatelessWidget {
+  final String injury;
+
+  DataList(this.injury);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection('exercises')
+          .document(injury)
+          .collection('exerciseSets')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if(snapshot.data == null) return CircularProgressIndicator();
+
+        if (snapshot.hasError)
+          return new Text('Error: ${snapshot.error}');
+        else {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              DocumentSnapshot mypost = snapshot.data.documents[index];
+              return Stack(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 400.0,
+                          child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Material(
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 200.0,
+                                            child: Image.network(
+                                                '${mypost['image']}',
+                                                fit: BoxFit.fill),
+                                          ),
+                                          SizedBox(
+                                            height: 10.0,
+                                          ),
+                                           Text(
+                                              '${mypost['title']}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: 'HelveticaNeue',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                          SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          SizedBox(
+                                            height: 80.0,
+                                            child: AutoSizeText(
+                                              '${mypost['subtitle']}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: 'HelveticaNeue',
+                                                  fontSize: 25.0),
+                                                  minFontSize: 5,
+                                            ),
+                                          ),
+                                           SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          SizedBox(
+                                            height: 30.0,
+                                            child: AutoSizeText(
+                                              'muscle groups: ${mypost['muscles']}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: 'HelveticaNeue',
+                                                  fontSize: 15.0),
+                                                  minFontSize: 5,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )))),
+                    ],
+                  )
+                ],
+              );
+            },
+          );
+        }
+        /*
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new Text('Loading...');
+          default:
+            return new ListView(
+              scrollDirection: Axis.vertical,
+              children:
+                  snapshot.data.documents.map((DocumentSnapshot document) {
+                return new ListTile(
+                  title: new Text(
+                    document['Name'],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'HelveticaNeue',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                  leading: Image.asset(
+                    "assets/icons/icon1.png",
+                    color: Colors.white,
+                    width: 20,
+                    height: 20,
+                  ),
+                  contentPadding: EdgeInsets.only(left: 20, right: 20),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/charts');
+                  },
+                );
+              }).toList(),
+            );
+        }
+        */
+      },
+    );
+  }
+}
+
 class ExercisePage extends StatelessWidget {
+  final String injury;
+  ExercisePage({Key key, @required this.injury}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        '/bluetooth': (BuildContext context) => FlutterBlueApp(),
-        '/data': (BuildContext context) => SensorPage(),
-        '/profile': (BuildContext context) => ProfileView(),
+        '/exercise2': (BuildContext context) => ExercisePageTwo(),
       },
-      home: ExercisePageScreen(),
+      home: ExercisePageScreen(injury),
     );
   }
 }
 
 class ExercisePageScreen extends StatelessWidget {
+  final String injury;
+
+  ExercisePageScreen(this.injury);
   @override
   Widget build(BuildContext context) {
     final titles = [
@@ -85,7 +223,7 @@ class ExercisePageScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "Common Shoulder Injuries",
+                          injury,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'HelveticaNeue',
@@ -100,25 +238,7 @@ class ExercisePageScreen extends StatelessWidget {
                 height: 20,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: titles.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      //                           <-- Card widget
-                      child: ListTile(
-                        title: Text(
-                          titles[index],
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'HelveticaNeue',
-                            fontWeight: FontWeight.bold,
-                            fontSize: width * 0.04,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: Scrollbar(child: new DataList(injury)),
               )
             ],
           ),
@@ -136,33 +256,33 @@ class _AppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed('/exercise2');
+            },
+            child: ClayContainer(
+              height: 50,
+              width: 50,
+              depth: 20,
+              borderRadius: 25,
+              parentColor: redColor,
+              curveType: CurveType.concave,
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.white.withOpacity(0.3), width: 2),
+                    borderRadius: BorderRadius.all(Radius.circular(25))),
+                child: Icon(Icons.arrow_back, color: Colors.black, size: 25),
+              ),
+            ),
+          ),
           Text(
-            "Exercise Sets",
+            "Exercises",
             style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'HelveticaNeue',
-                fontSize: 30,
+                fontSize: 40,
                 fontWeight: FontWeight.bold),
-          ),
-          ClayContainer(
-            height: 50,
-            width: 50,
-            depth: 20,
-            borderRadius: 25,
-            parentColor: redColor,
-            curveType: CurveType.concave,
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Colors.white.withOpacity(0.3), width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              child: IconButton(
-                icon: Icon(Icons.person, color: Colors.black, size: 25),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/profile');
-                },
-              ),
-            ),
           ),
         ],
       ),

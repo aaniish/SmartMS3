@@ -1,3 +1,4 @@
+import 'package:smart_ms3/pages/mainExercisePage.dart';
 import 'package:smart_ms3/pages/navigation/animated_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/charts_page.dart';
@@ -46,7 +47,7 @@ class _BottomBarNavigationState
   final tabs = [
     Homepage(),
     ChartsPageTwo(),
-    ExercisePage(),
+    ExercisePageTwo(),
   ];
   @override
   Widget build(BuildContext context) {
