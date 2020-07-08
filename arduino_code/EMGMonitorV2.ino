@@ -1,3 +1,5 @@
+
+
 // ArduinoBLE - Version: Latest 
 #include <ArduinoBLE.h>
 
@@ -7,8 +9,7 @@ BLEService emgService("dd55f584-5caa-4726-8be9-6ee6621d52b9");
 // BLE Level Characteristic
 BLEUnsignedCharCharacteristic emgLevelChar("6fa807df-2cf4-4e1e-915b-ad0623bf573d",  // standard 128-bit characteristic UUID
     BLERead | BLENotify); // remote clients will be able to get notifications if this characteristic changes
-
-int emgNumber = 0;
+int emgValue = 0;
 int version = 3;
 String str = "Bluetooth device active, waiting for connections... - verison: ";
 String finalstr = str+version; 
@@ -58,10 +59,11 @@ void loop() {
    
     // while the central is connected:
     while (central.connected()) {
-        emgNumber = analogRead(A0);
+        emgValue = analogRead(A0);
         Serial.print("Sensor value is: "); // print it
-        Serial.println(emgNumber);
-        emgLevelChar.writeValue(emgNumber);
+        Serial.println(emgValue);
+        emgValue = emgValue * .255;
+        emgLevelChar.writeValue(emgValue);
         delay(1000); 
     }
     // when the central disconnects, turn off the LED:
