@@ -23,7 +23,12 @@ class FirstView extends StatelessWidget {
                 SizedBox(height: _height * 0.10),
                 Text(
                   "Welcome",
-                  style: TextStyle(fontSize: 44, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 44,
+                    color: Colors.white,
+                    fontFamily: 'HelveticaNeue',
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: _height * 0.10),
                 SizedBox(height: _height * 0.15),
@@ -39,7 +44,8 @@ class FirstView extends StatelessWidget {
                       style: TextStyle(
                         color: primaryColor,
                         fontSize: 28,
-                        fontWeight: FontWeight.w300,
+                        fontFamily: 'HelveticaNeue',
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -62,7 +68,12 @@ class FirstView extends StatelessWidget {
                 FlatButton(
                   child: Text(
                     "Sign In",
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontFamily: 'HelveticaNeue',
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/signIn');

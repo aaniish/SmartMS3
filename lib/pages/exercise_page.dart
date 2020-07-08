@@ -36,70 +36,78 @@ class DataList extends StatelessWidget {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 400.0,
-                          child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Material(
-                                  color: Colors.white,
-                                  child: Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 200.0,
-                                            child: Image.network(
-                                                '${mypost['image']}',
-                                                fit: BoxFit.fill),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40.0),
+                                                child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 400.0,
+                              color: Colors.white,
+                              child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Material(
+                                    
+                                      color: Colors.white,
+                                      child: Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 200.0,
+                                                child: Image.network(
+                                                    '${mypost['image']}',
+                                                    fit: BoxFit.fill),
+                                              ),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                               Text(
+                                                  '${mypost['title']}',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: 'HelveticaNeue',
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 15),
+                                                ),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              SizedBox(
+                                                height: 80.0,
+                                                child: AutoSizeText(
+                                                  '${mypost['subtitle']}',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: 'HelveticaNeue',
+                                                      fontSize: 25.0),
+                                                      minFontSize: 5,
+                                                ),
+                                              ),
+                                               SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              SizedBox(
+                                                height: 30.0,
+                                                child: AutoSizeText(
+                                                  'muscle groups: ${mypost['muscles']}',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontFamily: 'HelveticaNeue',
+                                                      fontSize: 15.0),
+                                                      minFontSize: 5,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                           Text(
-                                              '${mypost['title']}',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'HelveticaNeue',
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            ),
-                                          SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          SizedBox(
-                                            height: 80.0,
-                                            child: AutoSizeText(
-                                              '${mypost['subtitle']}',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'HelveticaNeue',
-                                                  fontSize: 25.0),
-                                                  minFontSize: 5,
-                                            ),
-                                          ),
-                                           SizedBox(
-                                            height: 10.0,
-                                          ),
-                                          SizedBox(
-                                            height: 30.0,
-                                            child: AutoSizeText(
-                                              'muscle groups: ${mypost['muscles']}',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: 'HelveticaNeue',
-                                                  fontSize: 15.0),
-                                                  minFontSize: 5,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )))),
+                                        ),
+                                      )))),
+                        ),
+                      ),
                     ],
                   )
                 ],
@@ -107,39 +115,6 @@ class DataList extends StatelessWidget {
             },
           );
         }
-        /*
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return new Text('Loading...');
-          default:
-            return new ListView(
-              scrollDirection: Axis.vertical,
-              children:
-                  snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text(
-                    document['Name'],
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'HelveticaNeue',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                  leading: Image.asset(
-                    "assets/icons/icon1.png",
-                    color: Colors.white,
-                    width: 20,
-                    height: 20,
-                  ),
-                  contentPadding: EdgeInsets.only(left: 20, right: 20),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/charts');
-                  },
-                );
-              }).toList(),
-            );
-        }
-        */
       },
     );
   }
@@ -152,6 +127,7 @@ class ExercisePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
+    
       routes: <String, WidgetBuilder>{
         '/exercise2': (BuildContext context) => ExercisePageTwo(),
       },
@@ -166,29 +142,6 @@ class ExercisePageScreen extends StatelessWidget {
   ExercisePageScreen(this.injury);
   @override
   Widget build(BuildContext context) {
-    final titles = [
-      'Bursitis ',
-      'Tendinitis',
-      'Frozen Shoulder',
-      'Impingement ',
-      'Rotator Cuff Tear',
-      'Shoulder Arthritis',
-      'Shoulder Instability ',
-      'Shoulder Dislocation',
-      'Shoulder Separation'
-    ];
-
-    final icons = [
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png")
-    ];
 
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
