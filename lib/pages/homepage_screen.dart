@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clay_containers/clay_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_ms3/completedGoalsPage.dart';
+import 'package:smart_ms3/pages/completedGoalsPage.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/navigation/bottom_navigation.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
