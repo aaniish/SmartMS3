@@ -19,6 +19,7 @@ class ExercisePageTwo extends StatelessWidget {
         '/data': (BuildContext context) => SensorPage(),
         '/profile': (BuildContext context) => ProfileView(),
       },
+      theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
       home: ExercisePageScreenTwo(),
     );
   }
@@ -28,27 +29,15 @@ class ExercisePageScreenTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titles = [
-      'Bursitis ',
+      'Bursitis',
       'Tendinitis',
       'Frozen Shoulder',
-      'Impingement ',
+      'Impingement',
       'Rotator Cuff Tear',
       'Shoulder Arthritis',
-      'Shoulder Instability ',
+      'Shoulder Instability',
       'Shoulder Dislocation',
       'Shoulder Separation'
-    ];
-
-    final icons = [
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png"),
-      Image.asset("assets/icons/icon1.png")
     ];
 
     final width = MediaQuery.of(context).size.width;
@@ -110,16 +99,20 @@ class ExercisePageScreenTwo extends StatelessWidget {
                           builder: (context) =>
                               ExercisePage(injury: titles[index])));
                       },
-                      child: Card(
-                        //                           <-- Card widget
-                        child: ListTile(
-                          title: Text(
-                            titles[index],
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'HelveticaNeue',
-                              fontWeight: FontWeight.bold,
-                              fontSize: width * 0.04,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top:8.0,bottom:8.0,left:16,right:16),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                          child: ListTile(
+                            title: Text(
+                              titles[index],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'HelveticaNeue',
+                                fontWeight: FontWeight.bold,
+                                fontSize: width * 0.04,
+                              ),
                             ),
                           ),
                         ),

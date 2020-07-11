@@ -1,15 +1,15 @@
 import 'package:smart_ms3/pages/mainExercisePage.dart';
 import 'package:smart_ms3/pages/navigation/animated_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_ms3/pages/charts_page.dart';
 import 'package:smart_ms3/pages/mainChartsPage.dart';
 import 'package:smart_ms3/pages/homepage_screen.dart';
-import 'package:smart_ms3/pages/exercise_page.dart';
+import 'package:smart_ms3/pages/settings_page.dart';
 
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
 const Color navColor = const Color(0xFFffebef);
+int _selectedBarIndex = 0;
 
 class BottomBarNavigation extends StatefulWidget {
   final List<BarItem> barItems = [
@@ -42,12 +42,13 @@ class BottomBarNavigation extends StatefulWidget {
 
 class _BottomBarNavigationState
     extends State<BottomBarNavigation> {
-  int _selectedBarIndex = 0;
+  
 
   final tabs = [
     Homepage(),
     ChartsPageTwo(),
     ExercisePageTwo(),
+    SettingsPage()
   ];
   @override
   Widget build(BuildContext context) {

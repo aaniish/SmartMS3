@@ -57,6 +57,8 @@ class _SensorPageState extends State<SensorPage> {
     connectToDevice();
   }
 
+  
+
   connectToDevice() async {
     if (widget.device == null) {
       _Pop();

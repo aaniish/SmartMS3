@@ -105,41 +105,51 @@ class ChartspageScreenTwo extends StatelessWidget {
                     ),
                   )),
               categoriesScroller,
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(
-                          top: 110,
-                          bottom: 8,
-                          left: 32,
-                          right: 16,
-                        ),
-                        child: Container(
-                            child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Progress",
-                              style: (const TextStyle(
-                                  fontSize: 25,
-                                  fontFamily: 'HelveticaNeue',
-                                  fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ))),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: RoundedProgressBar(
-                    childLeft:
-                        Text("20%", style: TextStyle(color: Colors.white, fontFamily: 'HelveticaNeue', fontWeight: FontWeight.bold)),
-                    percent: 20,
-                    theme: RoundedProgressBarTheme.red),
-              )
             ],
+          ),
+          Positioned(
+            top: height * 0.63,
+            left: 0,
+            right: 0,
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(
+                        left: 32,
+                        right: 32,
+                      ),
+                      child: Container(
+                          child: Column(
+                        children: <Widget>[
+                          Text(
+                            "Progress",
+                            style: (const TextStyle(
+                                fontSize: 30,
+                                fontFamily: 'HelveticaNeue',
+                                fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 32,
+                              left: 8,
+                              right: 8,
+                            ),
+                            child: RoundedProgressBar(
+                                childLeft: Text("20%",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'HelveticaNeue',
+                                        fontWeight: FontWeight.bold)),
+                                percent: 20,
+                                theme: RoundedProgressBarTheme.red),
+                          ),
+                        ],
+                      ))),
+                ],
+              ),
+            ),
           ),
         ],
       ),

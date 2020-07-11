@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:clay_containers/clay_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/mainExercisePage.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
 
@@ -23,7 +24,10 @@ class DataList extends StatelessWidget {
           .collection('exerciseSets')
           .snapshots(),
       builder: (context, snapshot) {
-        if(snapshot.data == null) return CircularProgressIndicator();
+        if (snapshot.data == null) return Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: CircularProgressIndicator(),
+            );
 
         if (snapshot.hasError)
           return new Text('Error: ${snapshot.error}');
@@ -40,14 +44,13 @@ class DataList extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(40.0),
-                                                child: Container(
+                          child: Container(
                               width: MediaQuery.of(context).size.width,
                               height: 400.0,
                               color: Colors.white,
                               child: Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Material(
-                                    
                                       color: Colors.white,
                                       child: Center(
                                         child: Padding(
@@ -66,14 +69,14 @@ class DataList extends StatelessWidget {
                                               SizedBox(
                                                 height: 10.0,
                                               ),
-                                               Text(
-                                                  '${mypost['title']}',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: 'HelveticaNeue',
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
+                                              Text(
+                                                '${mypost['title']}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'HelveticaNeue',
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
                                               SizedBox(
                                                 height: 10.0,
                                               ),
@@ -83,12 +86,13 @@ class DataList extends StatelessWidget {
                                                   '${mypost['subtitle']}',
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontFamily: 'HelveticaNeue',
+                                                      fontFamily:
+                                                          'HelveticaNeue',
                                                       fontSize: 25.0),
-                                                      minFontSize: 5,
+                                                  minFontSize: 5,
                                                 ),
                                               ),
-                                               SizedBox(
+                                              SizedBox(
                                                 height: 10.0,
                                               ),
                                               SizedBox(
@@ -97,9 +101,10 @@ class DataList extends StatelessWidget {
                                                   'muscle groups: ${mypost['muscles']}',
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontFamily: 'HelveticaNeue',
+                                                      fontFamily:
+                                                          'HelveticaNeue',
                                                       fontSize: 15.0),
-                                                      minFontSize: 5,
+                                                  minFontSize: 5,
                                                 ),
                                               ),
                                             ],
@@ -127,7 +132,7 @@ class ExercisePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-    
+      theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
       routes: <String, WidgetBuilder>{
         '/exercise2': (BuildContext context) => ExercisePageTwo(),
       },
@@ -142,7 +147,6 @@ class ExercisePageScreen extends StatelessWidget {
   ExercisePageScreen(this.injury);
   @override
   Widget build(BuildContext context) {
-
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 

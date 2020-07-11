@@ -17,11 +17,10 @@ List<double> emgDataAverage = [0];
 List<double> emgDataOriginal = [0];
 String currentData = '';
 
-
-
 void clearEmg() {
   emgData = [0];
 }
+
 void clearDate() {
   currentData = '';
 }
@@ -39,7 +38,10 @@ class DataList extends StatelessWidget {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new Text('Loading...');
+            return Align(
+              alignment: FractionalOffset.topCenter,
+              child: CircularProgressIndicator(),
+            );
           default:
             return new ListView(
               scrollDirection: Axis.vertical,
@@ -102,6 +104,7 @@ class ChartsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
       routes: <String, WidgetBuilder>{
         '/bluetooth': (BuildContext context) => FlutterBlueApp(),
         '/data': (BuildContext context) => SensorPage(),
@@ -120,12 +123,10 @@ class ChartspageScreen extends StatelessWidget {
   ];
   bool showAvg = false;
   final String muscle;
- 
 
   ChartspageScreen(this.muscle);
 
   @override
-  
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -207,83 +208,79 @@ class ChartspageScreen extends StatelessWidget {
                         .min, // this will take space as minimum as posible(to center)
                     children: <Widget>[
                       FlatButton(
-                                  color: Colors.white60,
-                                  textColor: Colors.black,
-                                  disabledColor: Colors.grey,
-                                  disabledTextColor: Colors.black,
-                                  padding: EdgeInsets.all(10.0),
-                                  splashColor: Colors.grey,
-                                  onPressed: () {
-                                     getAverageDataSpot(emgDataOriginal);
-                                    emgData = emgDataAverage;
-                    Navigator.of(context).pushNamed('/charts');
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.red)),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "Avg",
-                                        style: TextStyle(
-                                            fontFamily: 'HelveticaNeue',
-                                            fontSize: 15.0),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                        color: Colors.white60,
+                        textColor: Colors.black,
+                        disabledColor: Colors.grey,
+                        disabledTextColor: Colors.black,
+                        padding: EdgeInsets.all(10.0),
+                        splashColor: Colors.grey,
+                        onPressed: () {
+                          getAverageDataSpot(emgDataOriginal);
+                          emgData = emgDataAverage;
+                          Navigator.of(context).pushNamed('/charts');
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.red)),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Avg",
+                              style: TextStyle(
+                                  fontFamily: 'HelveticaNeue', fontSize: 15.0),
+                            )
+                          ],
+                        ),
+                      ),
                       FlatButton(
-                                  color: Colors.white60,
-                                  textColor: Colors.black,
-                                  disabledColor: Colors.grey,
-                                  disabledTextColor: Colors.black,
-                                  padding: EdgeInsets.all(10.0),
-                                  splashColor: Colors.grey,
-                                  onPressed: () {
-                                    getSDDataSpot(emgDataOriginal);
-                                    emgData = emgDataAverage;
-                    Navigator.of(context).pushNamed('/charts');
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.red)),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "SD",
-                                        style: TextStyle(
-                                            fontFamily: 'HelveticaNeue',
-                                            fontSize: 15.0),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                FlatButton(
-                                  color: Colors.white60,
-                                  textColor: Colors.black,
-                                  disabledColor: Colors.grey,
-                                  disabledTextColor: Colors.black,
-                                  padding: EdgeInsets.all(10.0),
-                                  splashColor: Colors.grey,
-                                  onPressed: () {
-                                    emgData = emgDataOriginal;
-                                    print(emgData);
-                    Navigator.of(context).pushNamed('/charts');
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.red)),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "Reg",
-                                        style: TextStyle(
-                                            fontFamily: 'HelveticaNeue',
-                                            fontSize: 15.0),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                        color: Colors.white60,
+                        textColor: Colors.black,
+                        disabledColor: Colors.grey,
+                        disabledTextColor: Colors.black,
+                        padding: EdgeInsets.all(10.0),
+                        splashColor: Colors.grey,
+                        onPressed: () {
+                          getSDDataSpot(emgDataOriginal);
+                          emgData = emgDataAverage;
+                          Navigator.of(context).pushNamed('/charts');
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.red)),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "SD",
+                              style: TextStyle(
+                                  fontFamily: 'HelveticaNeue', fontSize: 15.0),
+                            )
+                          ],
+                        ),
+                      ),
+                      FlatButton(
+                        color: Colors.white60,
+                        textColor: Colors.black,
+                        disabledColor: Colors.grey,
+                        disabledTextColor: Colors.black,
+                        padding: EdgeInsets.all(10.0),
+                        splashColor: Colors.grey,
+                        onPressed: () {
+                          emgData = emgDataOriginal;
+                          Navigator.of(context).pushNamed('/charts');
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.red)),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Reg",
+                              style: TextStyle(
+                                  fontFamily: 'HelveticaNeue', fontSize: 15.0),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -298,7 +295,7 @@ class ChartspageScreen extends StatelessWidget {
                       color: redColor),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        right: 18.0, left: 12.0,bottom: 12),
+                        right: 18.0, left: 12.0, bottom: 12),
                     child: LineChart(
                       mainData(),
                     ),
@@ -324,7 +321,8 @@ class ChartspageScreen extends StatelessWidget {
                               "PICK DATASET / CURRENT:  $currentData",
                               style: (TextStyle(
                                   fontFamily: 'HelveticaNeue',
-                                  fontWeight: FontWeight.bold, fontSize: width * 0.03)),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: width * 0.03)),
                             ),
                           ],
                         ))),
@@ -370,11 +368,11 @@ class ChartspageScreen extends StatelessWidget {
     for (int j = 0; j < x.length; j++) {
       sum += x[j];
     }
-    double mean = sum/length;
+    double mean = sum / length;
     for (int i = 0; i < x.length; i++) {
-      sd += pow(x[i]-mean,2);
+      sd += pow(x[i] - mean, 2);
     }
-    sd = sqrt(sd/length);
+    sd = sqrt(sd / length);
     for (int n = 0; n < x.length; n++) {
       values.add(sd);
     }
@@ -418,6 +416,18 @@ class ChartspageScreen extends StatelessWidget {
                 return '30';
               case 40:
                 return '40';
+              case 50:
+                return '50';
+              case 60:
+                return '60';
+              case 70:
+                return '70';
+              case 80:
+                return '80';
+              case 90:
+                return '90';
+              case 100:
+                return '100';
             }
             return '';
           },
@@ -440,6 +450,8 @@ class ChartspageScreen extends StatelessWidget {
                 return '600';
               case 800:
                 return '800';
+              case 1000:
+                return '1000';
             }
             return '';
           },
@@ -450,9 +462,9 @@ class ChartspageScreen extends StatelessWidget {
       borderData: FlBorderData(
           show: true, border: Border.all(color: Colors.white, width: 1)),
       minX: 0,
-      maxX: 45,
+      maxX: 100,
       minY: 0,
-      maxY: 800,
+      maxY: 1000,
       lineBarsData: [
         LineChartBarData(
           spots: getDataSpot(emgData),
