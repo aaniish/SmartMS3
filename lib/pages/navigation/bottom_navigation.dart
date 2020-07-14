@@ -3,6 +3,7 @@ import 'package:smart_ms3/pages/navigation/animated_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/mainChartsPage.dart';
 import 'package:smart_ms3/pages/homepage_screen.dart';
+import 'package:smart_ms3/pages/questionnaire.dart';
 import 'package:smart_ms3/pages/settings_page.dart';
 
 

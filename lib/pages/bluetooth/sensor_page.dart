@@ -57,8 +57,6 @@ class _SensorPageState extends State<SensorPage> {
     connectToDevice();
   }
 
-  
-
   connectToDevice() async {
     if (widget.device == null) {
       _Pop();
@@ -169,6 +167,79 @@ class _SensorPageState extends State<SensorPage> {
       });
     }
 
+    void createAgeRecord(String muscleGroup) async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
+      String date =
+          DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
+      var name;
+      var age;
+      var gender;
+      await Firestore.instance
+          .collection("userData")
+          .document(uid)
+          .collection("userInfo")
+          .getDocuments()
+          .then((event) {
+        if (event.documents.isNotEmpty) {
+          Map<String, dynamic> documentData =
+              event.documents.single.data; //if it is a single document
+          name = documentData["Name"];
+          age = documentData["Age"];
+          gender = documentData["Gender"];
+        }
+      }).catchError((e) => print("error fetching data: $e"));
+
+      await databaseReference
+          .collection("userAgeData")
+          .document(age)
+          .collection('data for $age year olds')
+          .add({
+        'Data': emgData,
+        'Date': date,
+        'Name' : name,
+        'Age' : age,
+        'Time': emgData.length,
+        'Muscle Group': muscleGroup
+      });
+    }
+
+    void createGenderRecord(String muscleGroup) async {
+      final uid = await Provider.of(context).auth.getCurrentUID();
+      String date =
+          DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
+      var name;
+      var age;
+      var gender;
+      await Firestore.instance
+          .collection("userData")
+          .document(uid)
+          .collection("userInfo")
+          .getDocuments()
+          .then((event) {
+        if (event.documents.isNotEmpty) {
+          Map<String, dynamic> documentData =
+              event.documents.single.data; //if it is a single document
+          name = documentData["Name"];
+          age = documentData["Age"];
+          gender = documentData["Gender"];
+        }
+      }).catchError((e) => print("error fetching data: $e"));
+
+      await databaseReference
+          .collection("userGenderData")
+          .document(gender)
+          .collection('data for $gender')
+          .add({
+        'Data': emgData,
+        'Date': date,
+        'Name' : name,
+        'Gender' : gender,
+        'Age' : age,
+        'Time': emgData.length,
+        'Muscle Group': muscleGroup
+      });
+    }
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -196,14 +267,12 @@ class _SensorPageState extends State<SensorPage> {
                           int length = snapshot.data.length;
                           var currentValue = "";
                           if (snapshot.data.length > 0) {
-                            length = snapshot.data.length-1;
-                            currentValue =
-                              (snapshot.data[length] / .255)
-                                  .round()
-                                  .toString();
+                            length = snapshot.data.length - 1;
+                            currentValue = (snapshot.data[length] / .255)
+                                .round()
+                                .toString();
                           }
-                           
-                          
+
                           emgData.add(double.tryParse(currentValue) ?? 0);
 
                           return Center(
@@ -264,6 +333,8 @@ class _SensorPageState extends State<SensorPage> {
                                           splashColor: Colors.grey,
                                           onPressed: () {
                                             createRecord(dropdownValue);
+                                            createAgeRecord(dropdownValue);
+                                            createGenderRecord(dropdownValue);
                                             showDialog(
                                                 context: context,
                                                 builder: (context) {
@@ -303,9 +374,9 @@ class _SensorPageState extends State<SensorPage> {
                                     ]),
                               ),
                               Container(
-                            height: height * 0.15,
-                            child: oscilloscope,
-                          )
+                                height: height * 0.15,
+                                child: oscilloscope,
+                              )
                             ],
                           ));
                         } else {

@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:smart_ms3/pages/authentication/First_View.dart';
 import 'package:smart_ms3/pages/navigation/bottom_navigation.dart';
 import 'package:flutter/services.dart' ;
@@ -50,11 +51,45 @@ class HomeController extends StatelessWidget {
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final bool signedIn = snapshot.hasData;
-          return signedIn ? BottomBarNavigation() : FirstView();
+          return signedIn ? QuestionnaireController() : FirstView();
         }
         return CircularProgressIndicator();
       },
     );
   }
+
+  
+  Widget displayUserInformation(context, snapshot) {
+    final user = snapshot.data;
+    if(user.metadata.creationTime==user.metadata.lastSignInTime) {
+      return QuestionPageScreen();
+    } else {
+      return BottomBarNavigation();
+    }
+  }
 }
 
+class QuestionnaireController extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return FutureBuilder(
+              future: Provider.of(context).auth.getCurrentUser(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return displayUserInformation(context, snapshot);
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            );
+  }
+Widget displayUserInformation(context, snapshot) {
+    final user = snapshot.data;
+    if(user.metadata.creationTime==user.metadata.lastSignInTime) {
+      return QuestionPageScreen();
+    } else {
+      return BottomBarNavigation();
+    }
+  }
+}

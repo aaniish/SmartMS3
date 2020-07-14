@@ -142,7 +142,9 @@ class ChartspageScreen extends StatelessWidget {
             child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
                     bottom: const Radius.circular(40)),
-                child: Container(color: redColor)),
+                child: Container(
+                  color: redColor,
+                )),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,34 +169,6 @@ class ChartspageScreen extends StatelessWidget {
                             fontFamily: 'HelveticaNeue',
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30),
-                          child: FlatButton(
-                            color: Colors.white,
-                            textColor: Colors.black,
-                            disabledColor: Colors.grey,
-                            disabledTextColor: Colors.black,
-                            padding: EdgeInsets.all(10.0),
-                            splashColor: Colors.grey,
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/bluetooth');
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.red)),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(Icons.bluetooth_searching),
-                                Text(
-                                  "  Connect Device",
-                                  style: TextStyle(
-                                      fontFamily: 'HelveticaNeue',
-                                      fontSize: width * 0.03),
-                                )
-                              ],
-                            ),
                           ),
                         ),
                       ],
@@ -302,37 +276,43 @@ class ChartspageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.05),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(
-                          top: 30,
-                          bottom: 8,
-                          left: 32,
-                          right: 16,
-                        ),
-                        child: Container(
-                            child: Row(
-                          children: <Widget>[
-                            Text(
-                              "PICK DATASET / CURRENT:  $currentData",
-                              style: (TextStyle(
-                                  fontFamily: 'HelveticaNeue',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width * 0.03)),
-                            ),
-                          ],
-                        ))),
-                  ],
-                ),
-              ),
-              Expanded(
+              SizedBox(height: height * 0.07,),
+              
+            ],
+          ),
+          Positioned(
+            top: height * 0.60,
+            left: 0,
+            right: 0,
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(
+                        top: 30,
+                        bottom: 8,
+
+                      ),
+                      child: Container(
+                        height: height * 0.4,
+                          child: Column(
+                        children: <Widget>[
+                          Text(
+                            "PICK DATASET / CURRENT:  $currentData",
+                            style: (TextStyle(
+                                fontFamily: 'HelveticaNeue',
+                                fontWeight: FontWeight.bold,
+                                fontSize: width * 0.03)),
+                          ),
+                          Expanded(
                 child: Scrollbar(child: new DataList(muscle)),
               )
-            ],
+                        ],
+                      ))),
+                ],
+              ),
+            ),
           ),
         ],
       ),

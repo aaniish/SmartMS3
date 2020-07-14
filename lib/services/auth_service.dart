@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 String username;
 
 
-
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
+  
   Stream<String> get onAuthStateChanged =>
       _firebaseAuth.onAuthStateChanged.map(
             (FirebaseUser user) => user?.uid,
       );
+
 
   // GET UID
   Future<String> getCurrentUID() async {

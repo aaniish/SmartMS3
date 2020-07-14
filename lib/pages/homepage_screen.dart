@@ -378,7 +378,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 });
           } else {
             return Align(
-              alignment: FractionalOffset.topCenter,
+              alignment: FractionalOffset.bottomCenter,
               child: CircularProgressIndicator(),
             );
           }

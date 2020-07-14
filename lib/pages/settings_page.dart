@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
 
-
 const Color redColor = const Color(0xFFEA425C);
 
 class SettingsPage extends StatelessWidget {
@@ -13,7 +12,6 @@ class SettingsPage extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        
         '/profile': (BuildContext context) => ProfileView(),
       },
       theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
@@ -29,8 +27,7 @@ class SettingsScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Container(
+      body: Container(
         height: height,
         color: redColor,
         child: Column(
@@ -42,13 +39,11 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            
           ],
         ),
-      )),
+      ),
     );
   }
-
 }
 
 class _AppBar extends StatelessWidget {
@@ -87,7 +82,6 @@ class _AppBar extends StatelessWidget {
               ),
             ),
           ),
-          
         ],
       ),
     );
