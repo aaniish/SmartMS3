@@ -116,13 +116,25 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
           Map<String, dynamic> documentData =
               event.documents.single.data; //if it is a single document
           muscleGroups = documentData["muscle groups"];
-          //print(muscleGroups);
+          print(muscleGroups);
         }
       }).catchError((e) => print("error fetching data: $e"));
 
       var finalAverages = await getAverage(muscleGroups);
       String lowest = '';
-      for (int i = 0; i < muscleGroups.length; i++) {
+      bool allZero = true;
+      int counter = 0;
+      while(allZero && counter < muscleGroups.length) {
+        if(finalAverages[counter]==0 || finalAverages[counter]==null) {
+          allZero = true;
+        } else {
+          allZero = false;
+        }
+        counter++;
+      }
+      
+      if(!allZero) {
+        for (int i = 0; i < muscleGroups.length; i++) {
         if (finalAverages[i]==0) {
           finalAverages.removeAt(i);
           muscleGroups.removeAt(i);
@@ -134,16 +146,24 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
           i--;
         }
       }
-      for (int j = 0; j < muscleGroups.length - 1; j++) {
+
+      if (muscleGroups.length!=0) {
+        for (int j = 0; j < muscleGroups.length - 1; j++) {
         if (finalAverages[j] != null &&
-            finalAverages[j + 1] != null &&
             finalAverages[j] < finalAverages[j + 1]) {
           lowest = muscleGroups[j];
         } else { 
           lowest = muscleGroups[j+1];
         }
-        
       }
+      
+      }
+      }
+      
+      
+      print(finalAverages);
+      print(lowest);
+      
       
       return lowest;
     }
@@ -295,7 +315,7 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
                         ); // still loading
                       // alternatively use snapshot.connectionState != ConnectionState.done
                       final String targetMuscle = snapshot.data;
-                      return Column(
+                        return Column(
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30),
@@ -319,6 +339,7 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
                               )),
                         ],
                       );
+                      
                       // return a widget here (you have to return a widget to the builder)
                     }),
               ),
