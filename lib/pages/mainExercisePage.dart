@@ -383,7 +383,7 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
                                                 itemBuilder: (context, index) {
                                                   DocumentSnapshot mypost =
                                                       snapshot.data.documents[index];
-                                                  if (targetMuscle != "" && mypost["muscles"] != null &&
+                                                  if (targetMuscle != "" && targetMuscle !=null && mypost["muscles"] != null &&
                                                       mypost["muscles"].toLowerCase().contains(
                                                           targetMuscle.toLowerCase())) {
                                                     return Stack(
