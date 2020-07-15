@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/completedGoalsPage.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
+import 'package:smart_ms3/pages/exercise_page.dart';
 import 'package:smart_ms3/pages/navigation/bottom_navigation.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
@@ -44,7 +45,8 @@ class ExerciseList extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top:8.0,bottom:8.0,left:32,right:32),
+                        padding: const EdgeInsets.only(
+                            top: 8.0, bottom: 8.0, left: 32, right: 32),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30.0),
                           child: Container(
@@ -81,7 +83,8 @@ class ExerciseList extends StatelessWidget {
                                                       fontFamily:
                                                           'HelveticaNeue',
                                                       fontSize: 15.0,
-                                                      fontWeight: FontWeight.bold),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                   minFontSize: 5,
                                                 ),
                                               ),
@@ -171,6 +174,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   @override
+  Future<String> getInjury() async {
+    final uid = await Provider.of(context).auth.getCurrentUID();
+    var injury;
+    await Firestore.instance
+        .collection("userData")
+        .document(uid)
+        .collection("userInfo")
+        .getDocuments()
+        .then((event) {
+      if (event.documents.isNotEmpty) {
+        Map<String, dynamic> documentData =
+            event.documents.single.data; //if it is a single document
+        injury = documentData["Curent shoulder injury"];
+      }
+    }).catchError((e) => print("error fetching data: $e"));
+    return injury;
+  }
+
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
@@ -216,22 +237,37 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                ),
-                            onPressed: () {
-                              setState(() {
-                              });
-                            },
-                            color: Colors.white,
-                            textColor: Colors.black,
-                            child: Text("View all exercises",
-                                style: TextStyle(
-                                    fontSize: width * 0.046,
-                                    fontFamily: 'HelveticaNeue',
-                                    fontWeight: FontWeight.bold)),
-                          ),
+                          child: FutureBuilder(
+                              future: getInjury(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<String> snapshot) {
+                                if (!snapshot.hasData)
+                                  return Align(
+                                    child: CircularProgressIndicator(),
+                                  ); // still loading
+                                // alternatively use snapshot.connectionState != ConnectionState.done
+                                final String injury = snapshot.data;
+                                return RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExercisePage(injury: injury, route: "/home",)));
+                                  },
+                                  color: Colors.white,
+                                  textColor: Colors.black,
+                                  child: Text("View all exercises",
+                                      style: TextStyle(
+                                          fontSize: width * 0.046,
+                                          fontFamily: 'HelveticaNeue',
+                                          fontWeight: FontWeight.bold)),
+                                );
+                                // return a widget here (you have to return a widget to the builder)
+                              }),
                         ),
                       ],
                     ),
@@ -239,12 +275,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
               SizedBox(
                 height: height * 0.30,
                 child: Padding(
-                  padding: const EdgeInsets.only(left:16.0,right:16.0),
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.0),
-                                    child: Container(
+                    child: Container(
                       color: lightRed,
-                      child: ExerciseList('Bursitis'),
+                      child: FutureBuilder(
+                          future: getInjury(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (!snapshot.hasData)
+                              return Align(
+                                child: CircularProgressIndicator(),
+                              ); // still loading
+                            // alternatively use snapshot.connectionState != ConnectionState.done
+                            final String injury = snapshot.data;
+                            return ExerciseList(injury);
+                            // return a widget here (you have to return a widget to the builder)
+                          }),
                     ),
                   ),
                 ),
@@ -253,80 +301,86 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 height: 10,
               ),
               Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(
-                        left: 32,
-                        right: 16,
-                      ),
-                      child: Container(
-                          child: Row(
-                        children: <Widget>[
-                          Text(
-                            "GOALS FOR TODAY",
-                            style: (const TextStyle(
-                                fontFamily: 'HelveticaNeue',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add, color: Colors.white,),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      title: Text(
-                                        "Add Goal",
-                                        style: TextStyle(
-                                            fontFamily: 'HelveticaNeue',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      content: TextField(
-                                        onChanged: (String value) {
-                                          todoTitle = value;
-                                        },
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                            onPressed: () {
-                                              createTodos();
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          left: 32,
+                          right: 16,
+                        ),
+                        child: Container(
+                            child: Row(
+                          children: <Widget>[
+                            Text(
+                              "GOALS FOR TODAY",
+                              style: (const TextStyle(
+                                  fontFamily: 'HelveticaNeue',
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        title: Text(
+                                          "Add Goal",
+                                          style: TextStyle(
+                                              fontFamily: 'HelveticaNeue',
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        content: TextField(
+                                          onChanged: (String value) {
+                                            todoTitle = value;
+                                          },
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                              onPressed: () {
+                                                createTodos();
 
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              "Add",
-                                              style: TextStyle(
-                                                  fontFamily: 'HelveticaNeue',
-                                                  fontWeight: FontWeight.bold),
-                                            ))
-                                      ],
-                                    );
-                                  });
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.check_box, color: Colors.white,),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed('/goals');
-                            },
-                          ),
-                        ],
-                      ))),
-                ],
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                "Add",
+                                                style: TextStyle(
+                                                    fontFamily: 'HelveticaNeue',
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ))
+                                        ],
+                                      );
+                                    });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.check_box,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pushNamed('/goals');
+                              },
+                            ),
+                          ],
+                        ))),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: goalList(),
-            )
+              Expanded(
+                child: goalList(),
+              )
             ],
           ),
-          
         ],
       ),
     );

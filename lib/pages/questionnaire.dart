@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:smart_ms3/pages/navigation/bottom_navigation.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
+import 'package:date_time_format/date_time_format.dart';
+
 
 const Color redColor = const Color(0xFFfcbbc5);
 const Color redColor2 = const Color(0xFFEA425C);
@@ -165,14 +167,19 @@ class _QuestionPageState extends State<QuestionPage> {
   final injuries = [
     "None",
     "Cartilage / Labral tear",
-    "Dislocation",
     "Subluxation",
     "Sprain / strain",
     "Rotator Cuff Tear",
     "Partial",
     "Complete",
-    "Separation",
-    "Impingement"
+    "Impingement",
+    'Bursitis',
+    'Tendinitis',
+    'Frozen Shoulder',
+    'Shoulder Arthritis',
+    'Shoulder Instability',
+    'Shoulder Dislocation',
+    'Shoulder Separation'
   ];
   final shoulderSurgeries = [
     "None",
@@ -184,24 +191,9 @@ class _QuestionPageState extends State<QuestionPage> {
     "Rotator Cuff Repair",
     "Removal of outer portion of clavicle"
   ];
-  final yesNo = [
-    "Yes",
-    "No"
-  ];
-  final pain1 = [
-    "Unbearable",
-    "Severe",
-    "Moderate",
-    "Mild",
-    "None"
-  ];
-  final pain2 = [
-    "Very Severe",
-    "Severe",
-    "Moderate",
-    "Mild",
-    "None"
-  ];
+  final yesNo = ["Yes", "No"];
+  final pain1 = ["Unbearable", "Severe", "Moderate", "Mild", "None"];
+  final pain2 = ["Very Severe", "Severe", "Moderate", "Mild", "None"];
   final painFrequency = [
     "Every day",
     "Several days per week",
@@ -209,7 +201,25 @@ class _QuestionPageState extends State<QuestionPage> {
     "Less than one day per week",
     "Never"
   ];
-
+  final muscles = [
+    "Anterior Deltoid",
+    "Middle Deltoid",
+    "Posterior Deltoid",
+    "Upper Trapezius",
+    "Middle Trapezius",
+    "Lower Trapezius",
+    "Serratus Anterior",
+    "Teres Minor",
+    "Upper Latissinus Doris",
+    "Lower Latissinus Doris",
+    "Upper Pectoralis Major",
+    "Lower Pectoalis Major",
+    "Supraspinatus",
+    "Infraspinatus",
+    "Subscapularis",
+    "Rhomboid Major"
+  ];
+  final dateTime = new DateTime.now();
   var symptomsAns;
   var shoulderProblemStartAns;
   var shoulderTreatmentAns;
@@ -229,6 +239,7 @@ class _QuestionPageState extends State<QuestionPage> {
   var injuriesAns;
   var shoulderSurgeriesAns;
   String preventedWorkoutAns;
+  String currentInjuries;
   var pain1Ans;
   var pain2Ans;
   var painFrequencyAns;
@@ -302,12 +313,34 @@ class _QuestionPageState extends State<QuestionPage> {
       "What prior injuries have you had to this shoulder?": injuriesAns,
       "What Surgeries have you had on this shoulder?": shoulderSurgeriesAns,
       "Hand dominance": handDominance.text,
-      "Have you ever sustained a shoulder injury that prevented you from working or participating in activities of daily living or recreation": preventedWorkoutAns,
-      "How would you describe the worst pain from your shoulder?":pain1Ans,
-      "During the past month, how would you describe the usual pain in your shoulder at rest?":pain2Ans,
-      "During the past month, how often have you had severe pain in your shoulder?": painFrequencyAns
-
+      "Have you ever sustained a shoulder injury that prevented you from working or participating in activities of daily living or recreation":
+          preventedWorkoutAns,
+      "How would you describe the worst pain from your shoulder?": pain1Ans,
+      "During the past month, how would you describe the usual pain in your shoulder at rest?":
+          pain2Ans,
+      "During the past month, how often have you had severe pain in your shoulder?":
+          painFrequencyAns,
+      "Curent shoulder injury": currentInjuries
     });
+  }
+
+  void createMuscleRecords(List<String> muscles) async {
+    String theDate =
+          DateTimeFormat.format(dateTime, format: DateTimeFormats.american);
+    final uid = await Provider.of(context).auth.getCurrentUID();
+    for (int i = 0; i < muscles.length; i++) {
+      await databaseReference
+          .collection("userData")
+          .document(uid)
+          .collection(muscles[i])
+          .add({
+            'Data': [0.0],
+        'Date': theDate+" account made",
+        'Time': 0.0,
+        'Muscle Group': muscles[i],
+        'Average': 0.0,
+            });
+    }
   }
 
   Widget build(BuildContext context) {
@@ -341,7 +374,7 @@ class _QuestionPageState extends State<QuestionPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
                                 child: Text(
-                              "If already completed, exit this page",
+                              "MUST COMPLETE. If already completed, exit this page",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'HelveticaNeue',
@@ -403,8 +436,37 @@ class _QuestionPageState extends State<QuestionPage> {
                       },
                     ),
                   ),
-                  textInput(handDominance, "hand dominance",
-                      "Hand dominance"),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: DropdownButtonFormField(
+                      value: currentInjuries,
+                      icon: Icon(Icons.arrow_downward),
+                      decoration: InputDecoration(
+                        labelText: "Select current injury",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      items: injuries.map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          currentInjuries = newValue;
+                        });
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Select injury';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  textInput(handDominance, "hand dominance", "Hand dominance"),
                   textInput(physician, "Physician",
                       "Who is your primary care physician?"),
                   textInput(lastVisit, "Last Visit",
@@ -846,7 +908,6 @@ class _QuestionPageState extends State<QuestionPage> {
                       ],
                     ),
                   ),
-
                   Padding(
                       padding: EdgeInsets.all(20.0),
                       child: Text(
@@ -989,7 +1050,8 @@ class _QuestionPageState extends State<QuestionPage> {
                     padding: const EdgeInsets.all(20.0),
                     child: FormBuilderCheckboxList(
                       decoration: InputDecoration(
-                        labelText: "Do you lift weights for exercise/recreation? If so, how many times per week?",
+                        labelText:
+                            "Do you lift weights for exercise/recreation? If so, how many times per week?",
                         labelStyle: TextStyle(
                           fontSize: 13,
                         ),
@@ -997,7 +1059,8 @@ class _QuestionPageState extends State<QuestionPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      attribute: "Do you lift weights for exercise/recreation? If so, how many times per week?",
+                      attribute:
+                          "Do you lift weights for exercise/recreation? If so, how many times per week?",
                       initialValue: [weightsAns],
                       options: getOptions(weights),
                       onChanged: (value) {
@@ -1018,12 +1081,14 @@ class _QuestionPageState extends State<QuestionPage> {
                           fontFamily: 'HelveticaNeue',
                         ),
                       )),
-                  textInput(mri, "If so, what did the MRI show", "If so, what did the MRI show"),
+                  textInput(mri, "If so, what did the MRI show",
+                      "If so, what did the MRI show"),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: FormBuilderCheckboxList(
                       decoration: InputDecoration(
-                        labelText: "What prior injuries have you had to this shoulder?",
+                        labelText:
+                            "What prior injuries have you had to this shoulder?",
                         labelStyle: TextStyle(
                           fontSize: 13,
                         ),
@@ -1031,7 +1096,8 @@ class _QuestionPageState extends State<QuestionPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      attribute: "What prior injuries have you had to this shoulder?",
+                      attribute:
+                          "What prior injuries have you had to this shoulder?",
                       initialValue: [injuriesAns],
                       options: getOptions(injuries),
                       onChanged: (value) {
@@ -1047,7 +1113,8 @@ class _QuestionPageState extends State<QuestionPage> {
                     padding: const EdgeInsets.all(20.0),
                     child: FormBuilderCheckboxList(
                       decoration: InputDecoration(
-                        labelText: "What Surgeries have you had on this shoulder?",
+                        labelText:
+                            "What Surgeries have you had on this shoulder?",
                         labelStyle: TextStyle(
                           fontSize: 15,
                         ),
@@ -1055,7 +1122,8 @@ class _QuestionPageState extends State<QuestionPage> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      attribute: "What Surgeries have you had on this shoulder?",
+                      attribute:
+                          "What Surgeries have you had on this shoulder?",
                       initialValue: [shoulderSurgeriesAns],
                       options: getOptions(shoulderSurgeries),
                       onChanged: (value) {
@@ -1078,6 +1146,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
                           _formKey.currentState.save();
                           createRecord();
+                          createMuscleRecords(muscles);
                           Navigator.of(context).pushNamed('/home');
                         },
                         child: Text(

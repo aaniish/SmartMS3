@@ -29,7 +29,16 @@ class _SensorPageState extends State<SensorPage> {
   bool isReady;
   Stream<List<int>> stream;
   List<double> emgData = List();
+  double average;
   final dateTime = new DateTime.now();
+  double findAverage() {
+    double total = 0;
+    for (int i = 0; i < emgData.length; i++) {
+      total = total + emgData[i];
+    }
+    double ave = total / emgData.length;
+    return ave;
+  }
   final shoulder = [
     'Anterior Deltoid',
     'Middle Deltoid',
@@ -163,7 +172,8 @@ class _SensorPageState extends State<SensorPage> {
         'Data': emgData,
         'Date': date,
         'Time': emgData.length,
-        'Muscle Group': muscleGroup
+        'Muscle Group': muscleGroup,
+        'Average': findAverage(),
       });
     }
 

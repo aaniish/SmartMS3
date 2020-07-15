@@ -3,6 +3,7 @@ import 'package:clay_containers/clay_containers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
+import 'package:smart_ms3/pages/homepage_screen.dart';
 import 'package:smart_ms3/pages/mainExercisePage.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
 
@@ -127,7 +128,8 @@ class DataList extends StatelessWidget {
 
 class ExercisePage extends StatelessWidget {
   final String injury;
-  ExercisePage({Key key, @required this.injury}) : super(key: key);
+  final String route;
+  ExercisePage({Key key, @required this.injury, this.route}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -135,16 +137,17 @@ class ExercisePage extends StatelessWidget {
       theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
       routes: <String, WidgetBuilder>{
         '/exercise2': (BuildContext context) => ExercisePageTwo(),
+        '/home': (BuildContext context) => Homepage(),
       },
-      home: ExercisePageScreen(injury),
+      home: ExercisePageScreen(injury,route),
     );
   }
 }
 
 class ExercisePageScreen extends StatelessWidget {
   final String injury;
-
-  ExercisePageScreen(this.injury);
+  final String route;
+  ExercisePageScreen(this.injury, this.route);
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -169,7 +172,7 @@ class ExercisePageScreen extends StatelessWidget {
               SizedBox(
                 height: 50,
               ),
-              _AppBar(),
+              _AppBar(route),
               SizedBox(
                 height: 30,
               ),
@@ -206,6 +209,9 @@ class ExercisePageScreen extends StatelessWidget {
 }
 
 class _AppBar extends StatelessWidget {
+  
+  final String route;
+  _AppBar(this.route);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -215,7 +221,7 @@ class _AppBar extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed('/exercise2');
+              Navigator.of(context).pushNamed(route);
             },
             child: ClayContainer(
               height: 50,

@@ -8,6 +8,7 @@ import 'package:smart_ms3/pages/datadisplay_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_ms3/pages/mainChartsPage.dart';
 import 'package:smart_ms3/widgets/provider_widget.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 const Color redColor = const Color(0xFFEA425C);
 const Color iconBG = const Color(0x11647082);
@@ -24,6 +25,8 @@ void clearEmg() {
 void clearDate() {
   currentData = '';
 }
+
+void getTotalAverage() {}
 
 class DataList extends StatelessWidget {
   final String muscle;
@@ -276,8 +279,9 @@ class ChartspageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: height * 0.07,),
-              
+              SizedBox(
+                height: height * 0.07,
+              ),
             ],
           ),
           Positioned(
@@ -292,24 +296,32 @@ class ChartspageScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         top: 30,
                         bottom: 8,
-
                       ),
                       child: Container(
-                        height: height * 0.4,
+                          height: height * 0.4,
                           child: Column(
-                        children: <Widget>[
-                          Text(
-                            "PICK DATASET / CURRENT:  $currentData",
-                            style: (TextStyle(
-                                fontFamily: 'HelveticaNeue',
-                                fontWeight: FontWeight.bold,
-                                fontSize: width * 0.03)),
-                          ),
-                          Expanded(
-                child: Scrollbar(child: new DataList(muscle)),
-              )
-                        ],
-                      ))),
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25.0,
+                                  child: AutoSizeText(
+                                    "PICK DATASET / CURRENT:  $currentData",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'HelveticaNeue',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0),
+                                    minFontSize: 5,
+                                  ),
+                                ),
+                              ),
+                              
+                              Expanded(
+                                child: Scrollbar(child: new DataList(muscle)),
+                              )
+                            ],
+                          ))),
                 ],
               ),
             ),

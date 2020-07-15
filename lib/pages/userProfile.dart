@@ -15,8 +15,7 @@ class ProfileView extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Container(
+          body: Container(
         height: height,
         color: redColor,
         child: Column(
@@ -58,7 +57,7 @@ class ProfileView extends StatelessWidget {
             
           ],
         ),
-      )),
+      )
     );
   }
 
