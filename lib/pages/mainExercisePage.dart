@@ -116,22 +116,35 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
           Map<String, dynamic> documentData =
               event.documents.single.data; //if it is a single document
           muscleGroups = documentData["muscle groups"];
-          print(muscleGroups);
+          //print(muscleGroups);
         }
       }).catchError((e) => print("error fetching data: $e"));
 
       var finalAverages = await getAverage(muscleGroups);
-      print(finalAverages);
       String lowest = '';
-
+      for (int i = 0; i < muscleGroups.length; i++) {
+        if (finalAverages[i]==0) {
+          finalAverages.removeAt(i);
+          muscleGroups.removeAt(i);
+          i--;
+        }
+        if (finalAverages[i]==null) {
+          finalAverages.removeAt(i);
+          muscleGroups.removeAt(i);
+          i--;
+        }
+      }
       for (int j = 0; j < muscleGroups.length - 1; j++) {
         if (finalAverages[j] != null &&
             finalAverages[j + 1] != null &&
             finalAverages[j] < finalAverages[j + 1]) {
           lowest = muscleGroups[j];
+        } else { 
+          lowest = muscleGroups[j+1];
         }
+        
       }
-
+      
       return lowest;
     }
 
@@ -282,7 +295,6 @@ class _ExercisePageScreenTwoState extends State<ExercisePageScreenTwo> {
                         ); // still loading
                       // alternatively use snapshot.connectionState != ConnectionState.done
                       final String targetMuscle = snapshot.data;
-                      print("this is muscle $targetMuscle");
                       return Column(
                         children: <Widget>[
                           Padding(
