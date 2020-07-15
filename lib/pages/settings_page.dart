@@ -3,6 +3,8 @@ import 'package:clay_containers/widgets/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ms3/pages/bluetooth/mainBluetooth.dart';
 import 'package:smart_ms3/pages/userProfile.dart';
+import 'package:smart_ms3/pages/questionnaire.dart';
+
 
 const Color redColor = const Color(0xFFEA425C);
 
@@ -13,6 +15,8 @@ class SettingsPage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
         '/profile': (BuildContext context) => ProfileView(),
+        '/questionnaire': (BuildContext context) => QuestionPageScreen(),
+
       },
       theme: ThemeData(primaryColor: redColor, accentColor: redColorAccent),
       home: SettingsScreen(),
@@ -39,6 +43,26 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
+            Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(color: Colors.red)),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/questionnaire');                                               
+                    },
+                    color: Colors.white,
+                    textColor: Colors.black,
+                    child: Text("Questionnaire",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'HelveticaNeue',
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

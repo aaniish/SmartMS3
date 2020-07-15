@@ -165,13 +165,7 @@ class _QuestionPageState extends State<QuestionPage> {
     "Don’t lift weights"
   ];
   final injuries = [
-    "None",
-    "Cartilage / Labral tear",
-    "Subluxation",
-    "Sprain / strain",
     "Rotator Cuff Tear",
-    "Partial",
-    "Complete",
     "Impingement",
     'Bursitis',
     'Tendinitis',
